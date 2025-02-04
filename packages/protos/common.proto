@@ -1,0 +1,9 @@
+syntax="proto3";
+package common;
+
+option go_package = "github.com/saiponethaaung/language-learner/apps/api/common";
+
+message ErrorResponse {
+    string code = 1;
+    string message = 2;
+}
