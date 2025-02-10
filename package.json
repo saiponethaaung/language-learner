@@ -1,13 +1,24 @@
 {
-  "name": "language_learner",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "proto": "make proto"
+    "test": "turbo run test",
+    "build": "turbo run build",
+    "dev": "export TZ=UTC && turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "proto": "make proto",
+    "check-types": "tsc --noEmit"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "devDependencies": {
+    "turbo": "^2.3.4"
+  },
+  "pnpm": {
+    "overrides": {
+      "cross-spawn": ">=7.0.5"
+    }
+  },
+  "engines": {
+    "node": "v23.3.0"
+  },
+  "packageManager": "pnpm@9.15.4"
 }

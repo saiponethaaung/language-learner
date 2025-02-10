@@ -17,14 +17,27 @@ message LoginResponse {
 }
 
 message RegisterRequest {
-    string email = 1;
-    string password = 2;
+    string name = 1;
+    string email = 2;
+    string password = 3;
 }
 
 message RegisterResponse {
+    bool status  = 1;
+    optional string message = 2;
+    optional common.ErrorResponse error = 3;
+}
 
+message AdminObject {
+    string id = 1;
+    string name = 2;
+    string email = 3;
+    string createdAt = 4;
+    string updatedAt = 5;
 }
 
 service AdminService {
     rpc Login(LoginRequest) returns (LoginResponse) {}
+    rpc Register(RegisterRequest) returns (RegisterResponse){}
+    rpc Profile(common.EmptyRequest) returns (AdminObject) {}
 }
