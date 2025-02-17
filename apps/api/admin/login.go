@@ -35,7 +35,8 @@ func (s *Server) Login(ctx context.Context, dto *LoginRequest) (*LoginResponse, 
 		return message, nil
 	}
 
-	token, err := common.GenerateJWT(&dto.Email)
+	role := "admin"
+	token, err := common.GenerateJWT(&adminUser.ID, &role)
 
 	if err != nil {
 		return nil, err

@@ -8,12 +8,14 @@ import (
 
 type Server struct{}
 
-func (s *Server) Profile(ctx context.Context, _ *common.EmptyRequest) (*AdminObject, error) {
+func (s *Server) Profile(ctx context.Context, req *common.EmptyRequest) (*AdminObject, error) {
+	authInfo := ctx.Value(common.UserContextKey).(common.AuthInfo)
+
 	return &AdminObject{
-		Id:        "1",
-		Name:      "Admin",
-		Email:     "as",
-		CreatedAt: "Asd",
-		UpdatedAt: "ASd",
+		Id:        int32(authInfo.Admin.ID),
+		Name:      authInfo.Admin.Name,
+		Email:     authInfo.Admin.Email,
+		CreatedAt: authInfo.Admin.CreatedAt,
+		UpdatedAt: authInfo.Admin.UpdatedAt,
 	}, nil
 }

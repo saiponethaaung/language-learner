@@ -1,0 +1,49 @@
+syntax = "proto3";
+package language;
+
+import "common.proto";
+
+option go_package = "github.com/saiponethaaung/language-learner/apps/api/language";
+
+message GetLanguagesRequest {
+    string page = 1;
+    string limit = 2;
+}
+
+message CreateLanguageRequest {
+    string name = 1;
+    string code = 2;
+}
+
+message UpdateLanguageRequest {
+    string id = 1;
+    string name = 2;
+    string code = 3;
+}
+
+message UpdateLanguageStatusRequest {
+    string id = 1;
+    bool status = 2;
+}
+
+message LanguageObject {
+    string id = 1;
+    string name = 2;
+    string code = 3;
+    string createdAt = 4;
+    string updatedAt = 5;
+}
+
+message PaginationResponse {
+    repeated LanguageObject data = 1;
+    common.PaginationObject pagination = 2;
+}
+
+service LanguageService {
+    rpc GetLanguages(GetLanguagesRequest) returns (PaginationResponse) {}
+    rpc GetLanguage(common.IDRequest) returns (LanguageObject) {}
+    rpc CreateLanguage(CreateLanguageRequest) returns (LanguageObject) {}
+    rpc UpdateLanguage(UpdateLanguageRequest) returns (LanguageObject) {}
+    rpc UpdateLanguageStatus(UpdateLanguageStatusRequest) returns (LanguageObject) {}
+    rpc DeleteLanguage(common.IDRequest) returns (common.EmptyRequest) {}
+}

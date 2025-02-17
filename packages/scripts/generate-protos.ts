@@ -7,11 +7,11 @@ class GenerateProtos {
     const apiFolderPath = path.resolve(__dirname, "../../apps/api");
     const frontendFolderPath = path.resolve(
       __dirname,
-      "../../apps/frontend/src/grpc/gen"
+      "../../apps/frontend/src/utils/grpc/gen"
     );
     const adminFolderPath = path.resolve(
       __dirname,
-      "../../apps/admin/src/grpc/gen"
+      "../../apps/admin/src/utils/grpc/gen"
     );
     const protoPath = path.resolve(__dirname, "../protos");
     const files = fs.readdirSync(protoPath);

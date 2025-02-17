@@ -1,6 +1,6 @@
 "use client";
 
-import { ClientLogin } from "@/grpc/admin_client";
+import { ClientLogin } from "@app/utils/grpc/admin_client";
 
 export default function ActionBtn() {
   async function loginNow() {

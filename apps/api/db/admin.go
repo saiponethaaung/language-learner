@@ -23,7 +23,7 @@ type AdminRepo struct{}
 
 // CreateAdmin inserts a new admin into the database
 func (a *AdminRepo) CreateAdmin(ctx context.Context, admin Admin) (int, error) {
-	query := `INSERT INTO admins (name, email, status, password) 
+	query := `INSERT INTO admin (name, email, status, password) 
 	          VALUES ($1, $2, $3, $4) RETURNING id`
 
 	var id int
@@ -38,13 +38,12 @@ func (a *AdminRepo) CreateAdmin(ctx context.Context, admin Admin) (int, error) {
 
 // GetAdmin retrieves an admin by ID from the database
 func (a *AdminRepo) GetAdmin(ctx context.Context, id int) (Admin, error) {
-	args := []interface{}{}
-	args = append(args, id)
+	// args := []interface{}{}
+	// args = append(args, id)
 
-	query := `SELECT id, name, email, status, password, created_at, updated_at FROM admins WHERE id = $1`
+	query := `SELECT id, name, email, status, password, created_at, updated_at FROM admin WHERE id = $1`
 
-	var admin Admin
-	err := Pool.QueryRow(ctx, query, args).Scan(&admin.ID, &admin.Name, &admin.Email, &admin.Status, &admin.Password, &admin.CreatedAt, &admin.UpdatedAt)
+	rows, err := Pool.Query(ctx, query, id)
 
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -53,12 +52,14 @@ func (a *AdminRepo) GetAdmin(ctx context.Context, id int) (Admin, error) {
 		return Admin{}, err
 	}
 
+	admin, _ := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[Admin])
+
 	return admin, nil
 }
 
 // UpdateAdmin updates an existing admin in the database
 func (a *AdminRepo) UpdateAdmin(ctx context.Context, admin Admin) error {
-	query := `UPDATE admins SET `
+	query := `UPDATE admin SET `
 	args := []interface{}{}
 	argID := 1
 
@@ -92,7 +93,7 @@ func (a *AdminRepo) UpdateAdmin(ctx context.Context, admin Admin) error {
 
 // DeleteAdmin deletes an admin by ID from the database
 func (a *AdminRepo) DeleteAdmin(ctx context.Context, id int) error {
-	query := `DELETE FROM admins WHERE id = $1`
+	query := `DELETE FROM admin WHERE id = $1`
 	_, err := Pool.Exec(ctx, query, id)
 	return err
 }

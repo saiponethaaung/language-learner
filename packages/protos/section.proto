@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package section;
+
+option go_package = "github.com/saiponethaaung/language-learner/apps/api/section";
+
+service SectionService {}

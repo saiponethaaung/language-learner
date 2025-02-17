@@ -9,3 +9,16 @@ message ErrorResponse {
 }
 
 message EmptyRequest {}
+
+message IDRequest {
+    string id = 1;
+}
+
+message IntIDRequest {
+    string id = 1;
+}
+
+message StatusResponse {
+    bool status = 1;
+    string message = 2;
+}

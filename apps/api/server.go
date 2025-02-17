@@ -9,7 +9,10 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/saiponethaaung/language-learner/apps/api/admin"
+	"github.com/saiponethaaung/language-learner/apps/api/common"
 	"github.com/saiponethaaung/language-learner/apps/api/db"
+	"github.com/saiponethaaung/language-learner/apps/api/language"
+	"github.com/saiponethaaung/language-learner/apps/api/user"
 	"google.golang.org/grpc"
 )
 
@@ -35,11 +38,21 @@ func main() {
 		log.Fatal(errorMessage+", %v", err)
 	}
 
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(
+		grpc.UnaryInterceptor(common.Authenticate),
+	)
 
 	// Register admin Handler
 	adminServer := admin.Server{}
 	admin.RegisterAdminServiceServer(grpcServer, &adminServer)
+
+	// Register language Handler
+	languageServer := language.Server{}
+	language.RegisterLanguageServiceServer(grpcServer, &languageServer)
+
+	// Register user Handler
+	userServer := user.Server{}
+	user.RegisterUserServiceServer(grpcServer, &userServer)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		errorMessage := fmt.Sprintf("Failed to server gRPC server over port %s", port)

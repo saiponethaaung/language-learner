@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package chapter;
+
+option go_package = "github.com/saiponethaaung/language-learner/apps/api/chapter";
+
+service ChapterService {}

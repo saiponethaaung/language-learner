@@ -491,7 +491,7 @@ export namespace admin {
     export class AdminObject extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            id?: string;
+            id?: number;
             name?: string;
             email?: string;
             createdAt?: string;
@@ -518,9 +518,9 @@ export namespace admin {
             }
         }
         get id() {
-            return pb_1.Message.getFieldWithDefault(this, 1, "") as string;
+            return pb_1.Message.getFieldWithDefault(this, 1, 0) as number;
         }
-        set id(value: string) {
+        set id(value: number) {
             pb_1.Message.setField(this, 1, value);
         }
         get name() {
@@ -548,7 +548,7 @@ export namespace admin {
             pb_1.Message.setField(this, 5, value);
         }
         static fromObject(data: {
-            id?: string;
+            id?: number;
             name?: string;
             email?: string;
             createdAt?: string;
@@ -574,7 +574,7 @@ export namespace admin {
         }
         toObject() {
             const data: {
-                id?: string;
+                id?: number;
                 name?: string;
                 email?: string;
                 createdAt?: string;
@@ -601,8 +601,8 @@ export namespace admin {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
-            if (this.id.length)
-                writer.writeString(1, this.id);
+            if (this.id != 0)
+                writer.writeInt32(1, this.id);
             if (this.name.length)
                 writer.writeString(2, this.name);
             if (this.email.length)
@@ -621,7 +621,7 @@ export namespace admin {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        message.id = reader.readString();
+                        message.id = reader.readInt32();
                         break;
                     case 2:
                         message.name = reader.readString();
