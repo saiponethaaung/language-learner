@@ -359,4 +359,140 @@ export namespace common {
             return StatusResponse.deserialize(bytes);
         }
     }
+    export class PaginationObject extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            total?: number;
+            page?: number;
+            limit?: number;
+            totalPages?: number;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("total" in data && data.total != undefined) {
+                    this.total = data.total;
+                }
+                if ("page" in data && data.page != undefined) {
+                    this.page = data.page;
+                }
+                if ("limit" in data && data.limit != undefined) {
+                    this.limit = data.limit;
+                }
+                if ("totalPages" in data && data.totalPages != undefined) {
+                    this.totalPages = data.totalPages;
+                }
+            }
+        }
+        get total() {
+            return pb_1.Message.getFieldWithDefault(this, 1, 0) as number;
+        }
+        set total(value: number) {
+            pb_1.Message.setField(this, 1, value);
+        }
+        get page() {
+            return pb_1.Message.getFieldWithDefault(this, 2, 0) as number;
+        }
+        set page(value: number) {
+            pb_1.Message.setField(this, 2, value);
+        }
+        get limit() {
+            return pb_1.Message.getFieldWithDefault(this, 3, 0) as number;
+        }
+        set limit(value: number) {
+            pb_1.Message.setField(this, 3, value);
+        }
+        get totalPages() {
+            return pb_1.Message.getFieldWithDefault(this, 4, 0) as number;
+        }
+        set totalPages(value: number) {
+            pb_1.Message.setField(this, 4, value);
+        }
+        static fromObject(data: {
+            total?: number;
+            page?: number;
+            limit?: number;
+            totalPages?: number;
+        }): PaginationObject {
+            const message = new PaginationObject({});
+            if (data.total != null) {
+                message.total = data.total;
+            }
+            if (data.page != null) {
+                message.page = data.page;
+            }
+            if (data.limit != null) {
+                message.limit = data.limit;
+            }
+            if (data.totalPages != null) {
+                message.totalPages = data.totalPages;
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                total?: number;
+                page?: number;
+                limit?: number;
+                totalPages?: number;
+            } = {};
+            if (this.total != null) {
+                data.total = this.total;
+            }
+            if (this.page != null) {
+                data.page = this.page;
+            }
+            if (this.limit != null) {
+                data.limit = this.limit;
+            }
+            if (this.totalPages != null) {
+                data.totalPages = this.totalPages;
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.total != 0)
+                writer.writeInt32(1, this.total);
+            if (this.page != 0)
+                writer.writeInt32(2, this.page);
+            if (this.limit != 0)
+                writer.writeInt32(3, this.limit);
+            if (this.totalPages != 0)
+                writer.writeInt32(4, this.totalPages);
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): PaginationObject {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new PaginationObject();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        message.total = reader.readInt32();
+                        break;
+                    case 2:
+                        message.page = reader.readInt32();
+                        break;
+                    case 3:
+                        message.limit = reader.readInt32();
+                        break;
+                    case 4:
+                        message.totalPages = reader.readInt32();
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): PaginationObject {
+            return PaginationObject.deserialize(bytes);
+        }
+    }
 }

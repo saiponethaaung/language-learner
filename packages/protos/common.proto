@@ -22,3 +22,10 @@ message StatusResponse {
     bool status = 1;
     string message = 2;
 }
+
+message PaginationObject {
+    int32 total = 1;
+    int32 page = 2;
+    int32 limit = 3;
+    int32 totalPages = 4;
+}

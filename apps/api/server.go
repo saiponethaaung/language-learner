@@ -54,9 +54,10 @@ func main() {
 	userServer := user.Server{}
 	user.RegisterUserServiceServer(grpcServer, &userServer)
 
+	fmt.Printf("Server started on port %s", port)
+
 	if err := grpcServer.Serve(lis); err != nil {
 		errorMessage := fmt.Sprintf("Failed to server gRPC server over port %s", port)
 		log.Fatal(errorMessage+", %v", err)
 	}
-
 }

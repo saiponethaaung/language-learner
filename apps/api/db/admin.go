@@ -10,13 +10,13 @@ import (
 )
 
 type Admin struct {
-	ID        int    `db:"id"`
-	Name      string `db:"name"`
-	Email     string `db:"email"`
-	Status    int    `db:"status"`
-	Password  string `db:"password"`
-	CreatedAt string `db:"created_at"`
-	UpdatedAt string `db:"updated_at"`
+	ID        int       `db:"id"`
+	Name      string    `db:"name"`
+	Email     string    `db:"email"`
+	Status    int       `db:"status"`
+	Password  string    `db:"password"`
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
 }
 
 type AdminRepo struct{}
