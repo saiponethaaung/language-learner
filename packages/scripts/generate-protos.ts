@@ -13,6 +13,10 @@ class GenerateProtos {
       __dirname,
       "../../apps/admin/src/utils/grpc/gen"
     );
+    const adminTypeFolderPath = path.resolve(
+      __dirname,
+      "../../apps/admin/src/utils/grpc/type"
+    );
     const protoPath = path.resolve(__dirname, "../protos");
     const files = fs.readdirSync(protoPath);
     const binPath = path.resolve(__dirname, "./node_modules/.bin");
@@ -32,34 +36,23 @@ class GenerateProtos {
         `cd ../../ && protoc --go_out=plugins=grpc:${folderPath} --go_opt=paths=source_relative --proto_path=${protoPath} ${file}`
       );
 
-      // protoc \
-      // --plugin=protoc-gen-ts=$(which protoc-gen-ts) \
-      // --ts_out=grpc_js:. \
-      // --grpc_out=grpc_js:. \
-      // --js_out=import_style=commonjs,binary:. \
-      // service.proto
-      if (["admin.proto", "common.proto"].includes(file)) {
-        // execSync(
-        //   `cd ../../ && protoc --plugin=protoc-gen-ts="${protocGenTs}" --plugin=protoc-gen-grpc="${protocGenGRPC}" --ts_out=grpc_js:${frontendFolderPath}/ --grpc_out=grpc_js:${frontendFolderPath}/ --js_out=import_style=commonjs,binary:${frontendFolderPath}/ --proto_path=${protoPath} ${file}`
-        // );
-        // commands = `${commands} && protoc`;
-        // commands = `${commands} --js_out=import_style=commonjs,binary:${frontendFolderPath}/`;
-        // commands = `${commands} --grpc_out=${frontendFolderPath}/`;
-        // commands = `${commands} --plugin=protoc-gen-grpc=${binPath}/grpc_tools_node_protoc_plugin --proto_path=${protoPath} ${file}`;
+      if (["admin.proto", "common.proto", "language.proto"].includes(file)) {
+        // generate proto handler
         let commands = "cd ../../";
         commands = `${commands} && protoc`;
         commands = `${commands} --plugin=protoc-gen-ts=${binPath}/protoc-gen-ts`;
         commands = `${commands} --ts_out=${adminFolderPath}/ --proto_path=${protoPath} ${file}`;
         execSync(commands);
+        // generate types from proto
+        commands = "cd ../../";
+        commands = `${commands} && protoc`;
+        commands = `${commands} --plugin=protoc-gen-ts_proto=${binPath}/protoc-gen-ts_proto`;
+        commands = `${commands} --ts_proto_opt=esModuleInterop=true,outputEncodeMethods=false,outputJsonMethods=false,outputClientImpl=false`;
+        commands = `${commands} --ts_proto_out=${adminTypeFolderPath}/ --proto_path=${protoPath} ${file}`;
+        execSync(commands);
       }
+
       if (["user.proto", "common.proto"].includes(file)) {
-        // execSync(
-        //   `cd ../../ && protoc --plugin=protoc-gen-ts="${protocGenTs}" --plugin=protoc-gen-grpc="${protocGenGRPC}" --ts_out=grpc_js:${frontendFolderPath}/ --grpc_out=grpc_js:${frontendFolderPath}/ --js_out=import_style=commonjs,binary:${frontendFolderPath}/ --proto_path=${protoPath} ${file}`
-        // );
-        // commands = `${commands} && protoc`;
-        // commands = `${commands} --js_out=import_style=commonjs,binary:${frontendFolderPath}/`;
-        // commands = `${commands} --grpc_out=${frontendFolderPath}/`;
-        // commands = `${commands} --plugin=protoc-gen-grpc=${binPath}/grpc_tools_node_protoc_plugin --proto_path=${protoPath} ${file}`;
         let commands = "cd ../../";
         commands = `${commands} && protoc`;
         commands = `${commands} --plugin=protoc-gen-ts=${binPath}/protoc-gen-ts`;

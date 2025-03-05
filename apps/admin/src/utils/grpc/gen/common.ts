@@ -205,7 +205,7 @@ export namespace common {
     export class IntIDRequest extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            id?: string;
+            id?: number;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -216,13 +216,13 @@ export namespace common {
             }
         }
         get id() {
-            return pb_1.Message.getFieldWithDefault(this, 1, "") as string;
+            return pb_1.Message.getFieldWithDefault(this, 1, 0) as number;
         }
-        set id(value: string) {
+        set id(value: number) {
             pb_1.Message.setField(this, 1, value);
         }
         static fromObject(data: {
-            id?: string;
+            id?: number;
         }): IntIDRequest {
             const message = new IntIDRequest({});
             if (data.id != null) {
@@ -232,7 +232,7 @@ export namespace common {
         }
         toObject() {
             const data: {
-                id?: string;
+                id?: number;
             } = {};
             if (this.id != null) {
                 data.id = this.id;
@@ -243,8 +243,8 @@ export namespace common {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
-            if (this.id.length)
-                writer.writeString(1, this.id);
+            if (this.id != 0)
+                writer.writeInt64(1, this.id);
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -255,7 +255,7 @@ export namespace common {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        message.id = reader.readString();
+                        message.id = reader.readInt64();
                         break;
                     default: reader.skipField();
                 }

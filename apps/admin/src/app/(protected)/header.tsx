@@ -10,20 +10,20 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import classes from "./header.module.scss";
+import { useAppSelector } from "@app/utils/store/store";
 
 const user = {
-  name: "Jane Spoonfighter",
-  email: "janspoon@fighter.dev",
   image:
     "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png",
 };
 
 export function Header() {
+  const authState = useAppSelector((state) => state.auth);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
 
   return (
     <div className={classes.header}>
-      <Container className={classes.mainSection} size="md">
+      <Container className={classes.mainSection} fluid={true}>
         <Group justify="flex-end">
           <Menu
             width={260}
@@ -43,12 +43,12 @@ export function Header() {
                 <Group gap={7}>
                   <Avatar
                     src={user.image}
-                    alt={user.name}
+                    alt={authState.user.name}
                     radius="xl"
                     size={20}
                   />
                   <Text fw={500} size="sm" lh={1} mr={3}>
-                    {user.name}
+                    {authState.user.name}
                   </Text>
                   <IconChevronDown size={12} stroke={1.5} />
                 </Group>

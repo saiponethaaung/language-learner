@@ -1,9 +1,10 @@
 "use client";
 import PaginationLayout from "@app/components/layouts/pagination.layout";
 import {
+  Button,
   Center,
+  Container,
   Group,
-  keys,
   Table,
   Text,
   Title,
@@ -15,7 +16,13 @@ import {
   IconSelector,
 } from "@tabler/icons-react";
 import classes from "./page.module.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { GetLanguages } from "@app/utils/grpc/language_client";
+import { formatDate } from "@app/utils/date_format";
+import { useDisclosure } from "@mantine/hooks";
+import CreateLanguageModal from "@app/components/modal/create_language/create_language_modal";
+import { useAppDispatch, useAppSelector } from "@app/utils/store/store";
+import { setLanguages, setPagination } from "./language.slice";
 
 interface RowData {
   name: string;
@@ -52,164 +59,63 @@ function Th({ children, reversed, sorted, onSort }: ThProps) {
   );
 }
 
-const data = [
-  {
-    name: "Athena Weissnat",
-    company: "Little - Rippin",
-    email: "Elouise.Prohaska@yahoo.com",
-  },
-  {
-    name: "Deangelo Runolfsson",
-    company: "Greenfelder - Krajcik",
-    email: "Kadin_Trantow87@yahoo.com",
-  },
-  {
-    name: "Danny Carter",
-    company: "Kohler and Sons",
-    email: "Marina3@hotmail.com",
-  },
-  {
-    name: "Trace Tremblay PhD",
-    company: "Crona, Aufderhar and Senger",
-    email: "Antonina.Pouros@yahoo.com",
-  },
-  {
-    name: "Derek Dibbert",
-    company: "Gottlieb LLC",
-    email: "Abagail29@hotmail.com",
-  },
-  {
-    name: "Viola Bernhard",
-    company: "Funk, Rohan and Kreiger",
-    email: "Jamie23@hotmail.com",
-  },
-  {
-    name: "Austin Jacobi",
-    company: "Botsford - Corwin",
-    email: "Genesis42@yahoo.com",
-  },
-  {
-    name: "Hershel Mosciski",
-    company: "Okuneva, Farrell and Kilback",
-    email: "Idella.Stehr28@yahoo.com",
-  },
-  {
-    name: "Mylene Ebert",
-    company: "Kirlin and Sons",
-    email: "Hildegard17@hotmail.com",
-  },
-  {
-    name: "Lou Trantow",
-    company: "Parisian - Lemke",
-    email: "Hillard.Barrows1@hotmail.com",
-  },
-  {
-    name: "Dariana Weimann",
-    company: "Schowalter - Donnelly",
-    email: "Colleen80@gmail.com",
-  },
-  {
-    name: "Dr. Christy Herman",
-    company: "VonRueden - Labadie",
-    email: "Lilyan98@gmail.com",
-  },
-  {
-    name: "Katelin Schuster",
-    company: "Jacobson - Smitham",
-    email: "Erich_Brekke76@gmail.com",
-  },
-  {
-    name: "Melyna Macejkovic",
-    company: "Schuster LLC",
-    email: "Kylee4@yahoo.com",
-  },
-  {
-    name: "Pinkie Rice",
-    company: "Wolf, Trantow and Zulauf",
-    email: "Fiona.Kutch@hotmail.com",
-  },
-  {
-    name: "Brain Kreiger",
-    company: "Lueilwitz Group",
-    email: "Rico98@hotmail.com",
-  },
-  {
-    name: "Brain Kreiger",
-    company: "Lueilwitz Group",
-    email: "Rico98@hotmail.com",
-  },
-  {
-    name: "Brain Kreiger",
-    company: "Lueilwitz Group",
-    email: "Rico98@hotmail.com",
-  },
-  {
-    name: "Brain Kreiger",
-    company: "Lueilwitz Group",
-    email: "Rico98@hotmail.com",
-  },
-];
-
-function filterData(data: RowData[], search: string) {
-  const query = search.toLowerCase().trim();
-  return data.filter((item) =>
-    keys(data[0]).some((key) => item[key].toLowerCase().includes(query))
-  );
-}
-
 export default function LanguageList() {
-  const [search, setSearch] = useState("");
-  const [sortedData, setSortedData] = useState(data);
+  const [opened, { open, close }] = useDisclosure(false);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
+  const state = useAppSelector((state) => state.language);
+  const dispatch = useAppDispatch();
 
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
     setReverseSortDirection(reversed);
     setSortBy(field);
-    setSortedData(sortData(data, { sortBy: field, reversed, search }));
   };
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    setSearch(value);
-    setSortedData(
-      sortData(data, { sortBy, reversed: reverseSortDirection, search: value })
-    );
-  };
+  const loadLangauges = async (page: number) => {
+    const languages = await GetLanguages({
+      page,
+      limit: state.pagination.limit,
+    });
 
-  function sortData(
-    data: RowData[],
-    payload: { sortBy: keyof RowData | null; reversed: boolean; search: string }
-  ) {
-    const { sortBy } = payload;
-
-    if (!sortBy) {
-      return filterData(data, payload.search);
+    if (!languages.status) {
+      console.log("Failed to load languages");
+      return;
     }
 
-    return filterData(
-      [...data].sort((a, b) => {
-        if (payload.reversed) {
-          return b[sortBy].localeCompare(a[sortBy]);
-        }
+    if (languages.data) {
+      dispatch(setLanguages(languages.data.data));
+      dispatch(setPagination(languages.data.pagination));
+    } else {
+      console.log("Failed to load languages");
+    }
+  };
 
-        return a[sortBy].localeCompare(b[sortBy]);
-      }),
-      payload.search
-    );
-  }
-
-  const rows = sortedData.map((row) => (
-    <Table.Tr key={row.name}>
-      <Table.Td>{row.name}</Table.Td>
-      <Table.Td>{row.email}</Table.Td>
-      <Table.Td>{row.company}</Table.Td>
-    </Table.Tr>
-  ));
+  useEffect(() => {
+    loadLangauges(state.pagination.page);
+  }, []);
 
   return (
-    <PaginationLayout total={10} header={<Title order={5}>Languages</Title>}>
+    <PaginationLayout
+      total={state.pagination.totalPages}
+      paginate={(page) => loadLangauges(page)}
+      header={
+        <Container
+          fluid={true}
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Title order={5}>Languages</Title>
+          <Button variant="default" onClick={open}>
+            Add Langugae
+          </Button>
+        </Container>
+      }
+    >
       <Table
         horizontalSpacing="md"
         verticalSpacing="xs"
@@ -230,23 +136,45 @@ export default function LanguageList() {
               reversed={reverseSortDirection}
               onSort={() => setSorting("email")}
             >
-              Email
+              Code
             </Th>
             <Th
               sorted={sortBy === "company"}
               reversed={reverseSortDirection}
               onSort={() => setSorting("company")}
             >
-              Company
+              Status
+            </Th>
+            <Th
+              sorted={sortBy === "company"}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting("company")}
+            >
+              Created At
+            </Th>
+            <Th
+              sorted={sortBy === "company"}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting("company")}
+            >
+              Updated At
             </Th>
           </Table.Tr>
         </Table.Tbody>
         <Table.Tbody>
-          {rows.length > 0 ? (
-            rows
+          {state.data.length > 0 ? (
+            state.data.map((language) => (
+              <Table.Tr key={language.code}>
+                <Table.Td>{language.name}</Table.Td>
+                <Table.Td>{language.code}</Table.Td>
+                <Table.Td>Enabled</Table.Td>
+                <Table.Td>{formatDate(language.createdAt)}</Table.Td>
+                <Table.Td>{formatDate(language.updatedAt)}</Table.Td>
+              </Table.Tr>
+            ))
           ) : (
             <Table.Tr>
-              <Table.Td colSpan={Object.keys(data[0]).length}>
+              <Table.Td colSpan={Object.keys(state.data).length}>
                 <Text fw={500} ta="center">
                   Nothing found
                 </Text>
@@ -255,6 +183,15 @@ export default function LanguageList() {
           )}
         </Table.Tbody>
       </Table>
+      <CreateLanguageModal
+        opened={opened}
+        close={(complete: boolean) => {
+          close();
+          if (complete) {
+            loadLangauges(1);
+          }
+        }}
+      />
     </PaginationLayout>
   );
 }

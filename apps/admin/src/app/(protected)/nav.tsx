@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import {
+  IconBook,
   IconDeviceDesktopAnalytics,
   IconLanguage,
   IconLogout,
@@ -15,6 +16,7 @@ import { usePathname, useRouter } from "next/navigation";
 const mainLinksMockdata = [
   { icon: IconDeviceDesktopAnalytics, label: "Home", link: Routes.Home },
   { icon: IconLanguage, label: "Languages", link: Routes.Languages },
+  { icon: IconBook, label: "Courses", link: Routes.Courses },
   // { icon: IconBook, label: "Course", link: Routes.Courses },
   // { icon: IconUser, label: "Account", link: Routes.Account },
   // { icon: IconSettings, label: "Settings", link: Routes.Settings },

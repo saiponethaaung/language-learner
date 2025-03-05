@@ -2,7 +2,7 @@ package language
 
 import (
 	"context"
-	"strconv"
+	"math"
 	"time"
 
 	"github.com/saiponethaaung/language-learner/apps/api/common"
@@ -13,10 +13,9 @@ import (
 func (s *Server) GetLanguages(ctx context.Context, dto *GetLanguagesRequest) (*PaginationResponse, error) {
 	repo := &db.LanguageRepo{}
 
-	languages, err := repo.GetLanguages(ctx)
+	languages, err := repo.GetLanguages(ctx, int(dto.Limit), int(dto.Page))
 
 	if err != nil {
-		// log.Fatal(err)
 		return nil, err
 	}
 
@@ -24,7 +23,7 @@ func (s *Server) GetLanguages(ctx context.Context, dto *GetLanguagesRequest) (*P
 
 	for _, language := range languages {
 		languageObjects = append(languageObjects, &LanguageObject{
-			Id:        strconv.Itoa(language.ID),
+			Id:        int32(language.ID),
 			Name:      language.Name,
 			Code:      language.Code,
 			CreatedAt: language.CreatedAt.UTC().Format(time.RFC3339),
@@ -32,13 +31,22 @@ func (s *Server) GetLanguages(ctx context.Context, dto *GetLanguagesRequest) (*P
 		})
 	}
 
+	total, err := repo.CountLanguage(ctx)
+
+	if err != nil {
+		// log.Fatal(err)
+		return nil, err
+	}
+
+	totalPage := math.Ceil(float64(total) / float64(dto.Limit))
+
 	return &PaginationResponse{
 		Data: languageObjects,
 		Pagination: &common.PaginationObject{
-			Total:      0,
-			Page:       0,
-			Limit:      0,
-			TotalPages: 0,
+			Total:      int32(total),
+			Page:       dto.Page,
+			Limit:      dto.Limit,
+			TotalPages: int32(totalPage),
 		},
 	}, nil
 }

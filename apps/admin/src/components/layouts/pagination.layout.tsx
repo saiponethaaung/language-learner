@@ -1,30 +1,23 @@
 "use client";
 import { Container, Pagination, Space } from "@mantine/core";
+import classes from "./pagination.module.scss";
 import React from "react";
 
 interface IProps extends React.PropsWithChildren {
-  total: number;
   header: React.ReactNode;
+  total: number;
+  paginate: (page: number) => void;
 }
 
-function PaginationLayout({ children, header, total }: IProps) {
+function PaginationLayout({ children, header, total, paginate }: IProps) {
   return (
     <Container fluid={true} w="100%" p={15}>
-      <div style={{ height: "calc(100vh - 122px)", overflow: "hidden" }}>
+      <div className={classes.paginateContentCon}>
         {header}
         <Space h="md" />
-        <div
-          style={{
-            display: "flex",
-            flex: 1,
-            overflow: "auto",
-            height: "100%",
-          }}
-        >
-          {children}
-        </div>
+        <div className={classes.paginateContent}>{children}</div>
       </div>
-      <Pagination total={total}></Pagination>
+      <Pagination total={total} onChange={paginate}></Pagination>
     </Container>
   );
 }

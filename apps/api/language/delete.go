@@ -7,6 +7,6 @@ import (
 )
 
 // DeleteLanguage implements LanguageServiceServer.
-func (s *Server) DeleteLanguage(context.Context, *common.IDRequest) (*common.EmptyRequest, error) {
+func (s *Server) DeleteLanguage(context.Context, *common.IntIDRequest) (*common.EmptyRequest, error) {
 	panic("unimplemented")
 }

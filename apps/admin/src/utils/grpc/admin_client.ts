@@ -1,28 +1,15 @@
 "use server";
 
 import { admin } from "./gen/admin";
-import * as grpc from "@grpc/grpc-js";
 import { common } from "./gen/common";
-import { cookies } from "next/headers";
+import { AdminMeta, Client } from "./common_client";
 
 export const AdminClient = async () => {
-  const rpc = grpc.credentials.createInsecure();
-
-  const client = new admin.AdminServiceClient("127.0.0.1:9090", rpc);
+  const client = await Client<admin.AdminServiceClient>(
+    admin.AdminServiceClient
+  );
 
   return client;
-};
-
-export const AdminMeta = async (): Promise<grpc.Metadata> => {
-  const meta = new grpc.Metadata();
-  const cookie = await cookies();
-  const token = cookie.get("access_token")?.value;
-
-  if (token) {
-    meta.add("authorization", "Bearer " + token);
-  }
-
-  return meta;
 };
 
 export const AdminLogin = async (data: { email: string; password: string }) => {

@@ -58,13 +58,34 @@ func (a *LanguageRepo) GetLanguage(ctx context.Context, id int) (Language, error
 }
 
 // GetLanguage retrieves an Language by ID from the database
-func (a *LanguageRepo) GetLanguages(ctx context.Context) ([]Language, error) {
+func (a *LanguageRepo) GetLanguageByCode(ctx context.Context, code string) (Language, error) {
 	// args := []interface{}{}
 	// args = append(args, id)
 
-	query := `SELECT id, name, code, status, created_at, updated_at, created_by, updated_by FROM language where 1=1`
+	query := `SELECT id, name, code, status, created_at, updated_at, created_by, updated_by FROM language WHERE code = $1`
 
-	rows, err := Pool.Query(ctx, query)
+	rows, err := Pool.Query(ctx, query, code)
+
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return Language{}, nil
+		}
+		return Language{}, err
+	}
+
+	language, _ := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[Language])
+
+	return language, nil
+}
+
+// GetLanguage retrieves an Language by ID from the database
+func (a *LanguageRepo) GetLanguages(ctx context.Context, limit int, page int) ([]Language, error) {
+	// args := []interface{}{}
+	// args = append(args, id)
+
+	query := `SELECT id, name, code, status, created_at, updated_at, created_by, updated_by FROM language where 1=1 OFFSET $1 LIMIT $2`
+
+	rows, err := Pool.Query(ctx, query, (page-1)*limit, limit)
 
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -82,4 +103,37 @@ func (a *LanguageRepo) GetLanguages(ctx context.Context) ([]Language, error) {
 	fmt.Println(rows)
 
 	return languages, nil
+}
+
+func (a *LanguageRepo) UpdateLanguage(ctx context.Context, language *Language) (Language, error) {
+	query := `UPDATE language SET name = $1, code = $2, updated_by = $3, updated_at = $4, status = $5 WHERE id = $6`
+
+	_, err := Pool.Exec(ctx, query, language.Name, language.Code, language.UpdatedBy, language.UpdatedAt, language.Status, language.ID)
+
+	if err != nil {
+		return Language{}, err
+	}
+
+	return *language, nil
+}
+
+func (a *LanguageRepo) CountLanguage(ctx context.Context) (int, error) {
+	query := `SELECT COUNT(id) as count FROM language`
+
+	rows, err := Pool.Query(ctx, query)
+
+	if err != nil {
+		return 0, err
+	}
+
+	var count int
+
+	for rows.Next() {
+		err := rows.Scan(&count)
+		if err != nil {
+			return 0, err
+		}
+	}
+
+	return count, nil
 }
