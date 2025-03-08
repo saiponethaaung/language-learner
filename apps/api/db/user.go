@@ -10,20 +10,20 @@ import (
 )
 
 type User struct {
-	ID        int    `db:"id"`
-	Name      string `db:"name"`
-	Email     string `db:"email"`
-	Status    int    `db:"status"`
-	Password  string `db:"password"`
-	CreatedAt string `db:"created_at"`
-	UpdatedAt string `db:"updated_at"`
+	ID        int       `db:"id"`
+	Name      string    `db:"name"`
+	Email     string    `db:"email"`
+	Status    int       `db:"status"`
+	Password  string    `db:"password"`
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
 }
 
 type UserRepo struct{}
 
 // CreateUser inserts a new user into the database
 func (a *UserRepo) CreateUser(ctx context.Context, user User) (int, error) {
-	query := `INSERT INTO users (name, email, status, password) 
+	query := `INSERT INTO "user" (name, email, status, password) 
 	          VALUES ($1, $2, $3, $4) RETURNING id`
 
 	var id int
@@ -38,10 +38,12 @@ func (a *UserRepo) CreateUser(ctx context.Context, user User) (int, error) {
 
 // GetUser retrieves an user by ID from the database
 func (a *UserRepo) GetUser(ctx context.Context, id int) (User, error) {
-	query := `SELECT id, name, email, status, password, created_at, updated_at FROM users WHERE id = $1`
+	// args := []interface{}{}
+	// args = append(args, id)
 
-	var user User
-	err := Pool.QueryRow(ctx, query, id).Scan(&user.ID, &user.Name, &user.Email, &user.Status, &user.Password, &user.CreatedAt, &user.UpdatedAt)
+	query := `SELECT id, name, email, status, password, created_at, updated_at FROM "user" WHERE id = $1`
+
+	rows, err := Pool.Query(ctx, query, id)
 
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -50,12 +52,14 @@ func (a *UserRepo) GetUser(ctx context.Context, id int) (User, error) {
 		return User{}, err
 	}
 
+	user, _ := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[User])
+
 	return user, nil
 }
 
 // UpdateUser updates an existing user in the database
 func (a *UserRepo) UpdateUser(ctx context.Context, user User) error {
-	query := `UPDATE users SET `
+	query := `UPDATE "user" SET `
 	args := []interface{}{}
 	argID := 1
 
@@ -89,7 +93,7 @@ func (a *UserRepo) UpdateUser(ctx context.Context, user User) error {
 
 // DeleteUser deletes an user by ID from the database
 func (a *UserRepo) DeleteUser(ctx context.Context, id int) error {
-	query := `DELETE FROM users WHERE id = $1`
+	query := `DELETE FROM "user" WHERE id = $1`
 	_, err := Pool.Exec(ctx, query, id)
 	return err
 }

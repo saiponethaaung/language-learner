@@ -11,6 +11,16 @@ services:
     volumes:
       - ./docker-compose/postgres:/var/lib/postgresql/data
 
+  # Envoy proxy service
+  envoy:
+    image: envoyproxy/envoy:v1.26-latest
+    ports:
+      - "8080:8080" # Expose the Envoy proxy port
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml:ro # Mount the Envoy configuration
+    networks:
+      - shared_network
+
 networks:
   shared_network:
     driver: bridge

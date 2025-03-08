@@ -106,10 +106,6 @@ func Authenticate(ctx context.Context,
 		return nil, status.Errorf(codes.Unauthenticated, "invalid token: %v", err)
 	}
 
-	fmt.Println("middleware")
-	fmt.Println(claims)
-	fmt.Println("middleware")
-
 	authInfo := AuthInfo{
 		Type: claims.Role,
 	}
@@ -123,6 +119,23 @@ func Authenticate(ctx context.Context,
 		}
 
 		authInfo.Admin = admin
+
+		// Check if the user is authorized to access the method
+		// userOnly := map[string]bool{"/admin.AdminService/Login": true, "/admin.AdminService/Register": true, "/user.UserService/Login": true, "/user.UserService/Register": true}
+	}
+
+	if claims.Role == "user" {
+		userRepo := &db.UserRepo{}
+		user, err := userRepo.GetUser(ctx, claims.ID)
+
+		if err != nil {
+			return nil, status.Errorf(codes.Unauthenticated, "invalid token: %v", err)
+		}
+
+		authInfo.User = user
+
+		// Check if the user is authorized to access the method
+		// adminOnly := map[string]bool{"/admin.AdminService/Login": true, "/admin.AdminService/Register": true, "/user.UserService/Login": true, "/user.UserService/Register": true}
 	}
 
 	// Store user info in context

@@ -14,6 +14,7 @@ import (
 	"github.com/saiponethaaung/language-learner/apps/api/language"
 	"github.com/saiponethaaung/language-learner/apps/api/user"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -30,7 +31,7 @@ func main() {
 	db.Pool = dbCon
 
 	// Setup GRPC
-	port := ":9090"
+	port := "0.0.0.0:9090"
 	lis, err := net.Listen("tcp", port)
 
 	if err != nil {
@@ -41,6 +42,8 @@ func main() {
 	grpcServer := grpc.NewServer(
 		grpc.UnaryInterceptor(common.Authenticate),
 	)
+
+	reflection.Register(grpcServer)
 
 	// Register admin Handler
 	adminServer := admin.Server{}

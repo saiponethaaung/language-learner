@@ -17,6 +17,14 @@ class GenerateProtos {
       __dirname,
       "../../apps/admin/src/utils/grpc/type"
     );
+    const mobileFolderPath = path.resolve(
+      __dirname,
+      "../../apps/mobile/utils/grpc/gen"
+    );
+    const mobileTypeFolderPath = path.resolve(
+      __dirname,
+      "../../apps/mobile/utils/grpc/type"
+    );
     const protoPath = path.resolve(__dirname, "../protos");
     const files = fs.readdirSync(protoPath);
     const binPath = path.resolve(__dirname, "./node_modules/.bin");
@@ -52,12 +60,33 @@ class GenerateProtos {
         execSync(commands);
       }
 
-      if (["user.proto", "common.proto"].includes(file)) {
+      if (["user.proto", "common.proto", "language.proto"].includes(file)) {
         let commands = "cd ../../";
         commands = `${commands} && protoc`;
         commands = `${commands} --plugin=protoc-gen-ts=${binPath}/protoc-gen-ts`;
         commands = `${commands} --ts_out=${frontendFolderPath}/ --proto_path=${protoPath} ${file}`;
         execSync(commands);
+      }
+
+      if (["user.proto", "common.proto", "language.proto"].includes(file)) {
+        // generate proto handler
+        let commands = "cd ../../";
+        commands = `${commands} && protoc`;
+        commands = `${commands} --plugin=protoc-gen-js=${binPath}/protoc-gen-js`;
+        commands = `${commands} --plugin=protoc-gen-grpc-web=${binPath}/protoc-gen-grpc-web`;
+        commands = `${commands} --plugin=protoc-gen-ts=${binPath}/protoc-gen-ts`;
+        commands = `${commands} --ts_out=service=grpc-web:${mobileFolderPath}`;
+        commands = `${commands} --js_out=import_style=commonjs:${mobileFolderPath}/`;
+        commands = `${commands} --grpc-web_out=import_style=commonjs+dts,mode=grpcwebtext:${mobileFolderPath}/`;
+        commands = `${commands} --proto_path=${protoPath} ${file}`;
+        execSync(commands);
+        // // generate types from proto
+        // commands = "cd ../../";
+        // commands = `${commands} && protoc`;
+        // commands = `${commands} --plugin=protoc-gen-ts_proto=${binPath}/protoc-gen-ts_proto`;
+        // commands = `${commands} --ts_proto_opt=esModuleInterop=true,outputEncodeMethods=false,outputJsonMethods=false,outputClientImpl=false`;
+        // commands = `${commands} --ts_proto_out=${mobileTypeFolderPath}/ --proto_path=${protoPath} ${file}`;
+        // execSync(commands);
       }
     }
   }
