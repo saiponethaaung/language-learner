@@ -78,6 +78,66 @@ func (x *CreateCourse) GetSourceLanguageID() int32 {
 	return 0
 }
 
+type UpdateCourse struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	TargetLanguageID int32                  `protobuf:"varint,1,opt,name=targetLanguageID,proto3" json:"targetLanguageID,omitempty"`
+	SourceLanguageID int32                  `protobuf:"varint,2,opt,name=sourceLanguageID,proto3" json:"sourceLanguageID,omitempty"`
+	Status           bool                   `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *UpdateCourse) Reset() {
+	*x = UpdateCourse{}
+	mi := &file_course_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateCourse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateCourse) ProtoMessage() {}
+
+func (x *UpdateCourse) ProtoReflect() protoreflect.Message {
+	mi := &file_course_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateCourse.ProtoReflect.Descriptor instead.
+func (*UpdateCourse) Descriptor() ([]byte, []int) {
+	return file_course_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *UpdateCourse) GetTargetLanguageID() int32 {
+	if x != nil {
+		return x.TargetLanguageID
+	}
+	return 0
+}
+
+func (x *UpdateCourse) GetSourceLanguageID() int32 {
+	if x != nil {
+		return x.SourceLanguageID
+	}
+	return 0
+}
+
+func (x *UpdateCourse) GetStatus() bool {
+	if x != nil {
+		return x.Status
+	}
+	return false
+}
+
 type CourseObject struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
 	Id               int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -92,7 +152,7 @@ type CourseObject struct {
 
 func (x *CourseObject) Reset() {
 	*x = CourseObject{}
-	mi := &file_course_proto_msgTypes[1]
+	mi := &file_course_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -104,7 +164,7 @@ func (x *CourseObject) String() string {
 func (*CourseObject) ProtoMessage() {}
 
 func (x *CourseObject) ProtoReflect() protoreflect.Message {
-	mi := &file_course_proto_msgTypes[1]
+	mi := &file_course_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -117,7 +177,7 @@ func (x *CourseObject) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CourseObject.ProtoReflect.Descriptor instead.
 func (*CourseObject) Descriptor() ([]byte, []int) {
-	return file_course_proto_rawDescGZIP(), []int{1}
+	return file_course_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *CourseObject) GetId() int32 {
@@ -173,7 +233,15 @@ var file_course_proto_rawDesc = string([]byte{
 	0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x4c, 0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x49, 0x44,
 	0x12, 0x2a, 0x0a, 0x10, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x4c, 0x61, 0x6e, 0x67, 0x75, 0x61,
 	0x67, 0x65, 0x49, 0x44, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x10, 0x73, 0x6f, 0x75, 0x72,
-	0x63, 0x65, 0x4c, 0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x49, 0x44, 0x22, 0xca, 0x01, 0x0a,
+	0x63, 0x65, 0x4c, 0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x49, 0x44, 0x22, 0x7e, 0x0a, 0x0c,
+	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x6f, 0x75, 0x72, 0x73, 0x65, 0x12, 0x2a, 0x0a, 0x10,
+	0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x4c, 0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x49, 0x44,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x10, 0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x4c, 0x61,
+	0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x49, 0x44, 0x12, 0x2a, 0x0a, 0x10, 0x73, 0x6f, 0x75, 0x72,
+	0x63, 0x65, 0x4c, 0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x49, 0x44, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x05, 0x52, 0x10, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x4c, 0x61, 0x6e, 0x67, 0x75, 0x61,
+	0x67, 0x65, 0x49, 0x44, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x03,
+	0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0xca, 0x01, 0x0a,
 	0x0c, 0x43, 0x6f, 0x75, 0x72, 0x73, 0x65, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x12, 0x0e, 0x0a,
 	0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x02, 0x69, 0x64, 0x12, 0x2a, 0x0a,
 	0x10, 0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x4c, 0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x49,
@@ -199,7 +267,7 @@ var file_course_proto_rawDesc = string([]byte{
 	0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x14, 0x2e, 0x63, 0x6f, 0x75, 0x72, 0x73,
 	0x65, 0x2e, 0x43, 0x6f, 0x75, 0x72, 0x73, 0x65, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x22, 0x00,
 	0x12, 0x36, 0x0a, 0x06, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x12, 0x14, 0x2e, 0x63, 0x6f, 0x75,
-	0x72, 0x73, 0x65, 0x2e, 0x43, 0x6f, 0x75, 0x72, 0x73, 0x65, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74,
+	0x72, 0x73, 0x65, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x6f, 0x75, 0x72, 0x73, 0x65,
 	0x1a, 0x14, 0x2e, 0x63, 0x6f, 0x75, 0x72, 0x73, 0x65, 0x2e, 0x43, 0x6f, 0x75, 0x72, 0x73, 0x65,
 	0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x22, 0x00, 0x12, 0x35, 0x0a, 0x06, 0x44, 0x65, 0x6c, 0x65,
 	0x74, 0x65, 0x12, 0x11, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x49, 0x44, 0x52, 0x65,
@@ -224,26 +292,27 @@ func file_course_proto_rawDescGZIP() []byte {
 	return file_course_proto_rawDescData
 }
 
-var file_course_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_course_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_course_proto_goTypes = []any{
 	(*CreateCourse)(nil),          // 0: course.CreateCourse
-	(*CourseObject)(nil),          // 1: course.CourseObject
-	(*common.IntIDRequest)(nil),   // 2: common.IntIDRequest
-	(*common.EmptyRequest)(nil),   // 3: common.EmptyRequest
-	(*common.IDRequest)(nil),      // 4: common.IDRequest
-	(*common.StatusResponse)(nil), // 5: common.StatusResponse
+	(*UpdateCourse)(nil),          // 1: course.UpdateCourse
+	(*CourseObject)(nil),          // 2: course.CourseObject
+	(*common.IntIDRequest)(nil),   // 3: common.IntIDRequest
+	(*common.EmptyRequest)(nil),   // 4: common.EmptyRequest
+	(*common.IDRequest)(nil),      // 5: common.IDRequest
+	(*common.StatusResponse)(nil), // 6: common.StatusResponse
 }
 var file_course_proto_depIdxs = []int32{
 	0, // 0: course.CourseService.Create:input_type -> course.CreateCourse
-	2, // 1: course.CourseService.Get:input_type -> common.IntIDRequest
-	3, // 2: course.CourseService.GetAll:input_type -> common.EmptyRequest
-	1, // 3: course.CourseService.Update:input_type -> course.CourseObject
-	4, // 4: course.CourseService.Delete:input_type -> common.IDRequest
-	1, // 5: course.CourseService.Create:output_type -> course.CourseObject
-	1, // 6: course.CourseService.Get:output_type -> course.CourseObject
-	1, // 7: course.CourseService.GetAll:output_type -> course.CourseObject
-	1, // 8: course.CourseService.Update:output_type -> course.CourseObject
-	5, // 9: course.CourseService.Delete:output_type -> common.StatusResponse
+	3, // 1: course.CourseService.Get:input_type -> common.IntIDRequest
+	4, // 2: course.CourseService.GetAll:input_type -> common.EmptyRequest
+	1, // 3: course.CourseService.Update:input_type -> course.UpdateCourse
+	5, // 4: course.CourseService.Delete:input_type -> common.IDRequest
+	2, // 5: course.CourseService.Create:output_type -> course.CourseObject
+	2, // 6: course.CourseService.Get:output_type -> course.CourseObject
+	2, // 7: course.CourseService.GetAll:output_type -> course.CourseObject
+	2, // 8: course.CourseService.Update:output_type -> course.CourseObject
+	6, // 9: course.CourseService.Delete:output_type -> common.StatusResponse
 	5, // [5:10] is the sub-list for method output_type
 	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -262,7 +331,7 @@ func file_course_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_course_proto_rawDesc), len(file_course_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -290,7 +359,7 @@ type CourseServiceClient interface {
 	Create(ctx context.Context, in *CreateCourse, opts ...grpc.CallOption) (*CourseObject, error)
 	Get(ctx context.Context, in *common.IntIDRequest, opts ...grpc.CallOption) (*CourseObject, error)
 	GetAll(ctx context.Context, in *common.EmptyRequest, opts ...grpc.CallOption) (*CourseObject, error)
-	Update(ctx context.Context, in *CourseObject, opts ...grpc.CallOption) (*CourseObject, error)
+	Update(ctx context.Context, in *UpdateCourse, opts ...grpc.CallOption) (*CourseObject, error)
 	Delete(ctx context.Context, in *common.IDRequest, opts ...grpc.CallOption) (*common.StatusResponse, error)
 }
 
@@ -329,7 +398,7 @@ func (c *courseServiceClient) GetAll(ctx context.Context, in *common.EmptyReques
 	return out, nil
 }
 
-func (c *courseServiceClient) Update(ctx context.Context, in *CourseObject, opts ...grpc.CallOption) (*CourseObject, error) {
+func (c *courseServiceClient) Update(ctx context.Context, in *UpdateCourse, opts ...grpc.CallOption) (*CourseObject, error) {
 	out := new(CourseObject)
 	err := c.cc.Invoke(ctx, "/course.CourseService/Update", in, out, opts...)
 	if err != nil {
@@ -352,7 +421,7 @@ type CourseServiceServer interface {
 	Create(context.Context, *CreateCourse) (*CourseObject, error)
 	Get(context.Context, *common.IntIDRequest) (*CourseObject, error)
 	GetAll(context.Context, *common.EmptyRequest) (*CourseObject, error)
-	Update(context.Context, *CourseObject) (*CourseObject, error)
+	Update(context.Context, *UpdateCourse) (*CourseObject, error)
 	Delete(context.Context, *common.IDRequest) (*common.StatusResponse, error)
 }
 
@@ -369,7 +438,7 @@ func (*UnimplementedCourseServiceServer) Get(context.Context, *common.IntIDReque
 func (*UnimplementedCourseServiceServer) GetAll(context.Context, *common.EmptyRequest) (*CourseObject, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
 }
-func (*UnimplementedCourseServiceServer) Update(context.Context, *CourseObject) (*CourseObject, error) {
+func (*UnimplementedCourseServiceServer) Update(context.Context, *UpdateCourse) (*CourseObject, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
 }
 func (*UnimplementedCourseServiceServer) Delete(context.Context, *common.IDRequest) (*common.StatusResponse, error) {
@@ -435,7 +504,7 @@ func _CourseService_GetAll_Handler(srv interface{}, ctx context.Context, dec fun
 }
 
 func _CourseService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CourseObject)
+	in := new(UpdateCourse)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -447,7 +516,7 @@ func _CourseService_Update_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/course.CourseService/Update",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CourseServiceServer).Update(ctx, req.(*CourseObject))
+		return srv.(CourseServiceServer).Update(ctx, req.(*UpdateCourse))
 	}
 	return interceptor(ctx, in, info, handler)
 }

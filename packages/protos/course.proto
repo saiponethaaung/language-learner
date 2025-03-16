@@ -10,6 +10,12 @@ message CreateCourse {
     int32 sourceLanguageID = 2;
 }
 
+message UpdateCourse {
+    int32 targetLanguageID = 1;
+    int32 sourceLanguageID = 2;
+    bool status = 3;
+}
+
 message CourseObject {
     int32 id = 1;
     int32 targetLanguageID = 2;
@@ -23,6 +29,6 @@ service CourseService {
     rpc Create(CreateCourse) returns (CourseObject) {}
     rpc Get(common.IntIDRequest) returns (CourseObject) {}
     rpc GetAll(common.EmptyRequest) returns (CourseObject) {}
-    rpc Update(CourseObject) returns (CourseObject) {}
+    rpc Update(UpdateCourse) returns (CourseObject) {}
     rpc Delete(common.IDRequest) returns (common.StatusResponse) {}
 }
