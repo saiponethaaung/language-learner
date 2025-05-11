@@ -12,6 +12,7 @@ export namespace language {
         constructor(data?: any[] | {
             page?: number;
             limit?: number;
+            name?: string;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -21,6 +22,9 @@ export namespace language {
                 }
                 if ("limit" in data && data.limit != undefined) {
                     this.limit = data.limit;
+                }
+                if ("name" in data && data.name != undefined) {
+                    this.name = data.name;
                 }
             }
         }
@@ -36,9 +40,16 @@ export namespace language {
         set limit(value: number) {
             pb_1.Message.setField(this, 2, value);
         }
+        get name() {
+            return pb_1.Message.getFieldWithDefault(this, 3, "") as string;
+        }
+        set name(value: string) {
+            pb_1.Message.setField(this, 3, value);
+        }
         static fromObject(data: {
             page?: number;
             limit?: number;
+            name?: string;
         }): GetLanguagesRequest {
             const message = new GetLanguagesRequest({});
             if (data.page != null) {
@@ -47,18 +58,25 @@ export namespace language {
             if (data.limit != null) {
                 message.limit = data.limit;
             }
+            if (data.name != null) {
+                message.name = data.name;
+            }
             return message;
         }
         toObject() {
             const data: {
                 page?: number;
                 limit?: number;
+                name?: string;
             } = {};
             if (this.page != null) {
                 data.page = this.page;
             }
             if (this.limit != null) {
                 data.limit = this.limit;
+            }
+            if (this.name != null) {
+                data.name = this.name;
             }
             return data;
         }
@@ -70,6 +88,8 @@ export namespace language {
                 writer.writeInt32(1, this.page);
             if (this.limit != 0)
                 writer.writeInt32(2, this.limit);
+            if (this.name.length)
+                writer.writeString(3, this.name);
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -84,6 +104,9 @@ export namespace language {
                         break;
                     case 2:
                         message.limit = reader.readInt32();
+                        break;
+                    case 3:
+                        message.name = reader.readString();
                         break;
                     default: reader.skipField();
                 }
@@ -642,6 +665,140 @@ export namespace language {
             return PaginationResponse.deserialize(bytes);
         }
     }
+    export class GetLanguagesByIdsRequest extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            ids?: number[];
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [1], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("ids" in data && data.ids != undefined) {
+                    this.ids = data.ids;
+                }
+            }
+        }
+        get ids() {
+            return pb_1.Message.getFieldWithDefault(this, 1, []) as number[];
+        }
+        set ids(value: number[]) {
+            pb_1.Message.setField(this, 1, value);
+        }
+        static fromObject(data: {
+            ids?: number[];
+        }): GetLanguagesByIdsRequest {
+            const message = new GetLanguagesByIdsRequest({});
+            if (data.ids != null) {
+                message.ids = data.ids;
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                ids?: number[];
+            } = {};
+            if (this.ids != null) {
+                data.ids = this.ids;
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.ids.length)
+                writer.writePackedInt32(1, this.ids);
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): GetLanguagesByIdsRequest {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new GetLanguagesByIdsRequest();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        message.ids = reader.readPackedInt32();
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): GetLanguagesByIdsRequest {
+            return GetLanguagesByIdsRequest.deserialize(bytes);
+        }
+    }
+    export class LanguagesResponse extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            languages?: LanguageObject[];
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [1], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("languages" in data && data.languages != undefined) {
+                    this.languages = data.languages;
+                }
+            }
+        }
+        get languages() {
+            return pb_1.Message.getRepeatedWrapperField(this, LanguageObject, 1) as LanguageObject[];
+        }
+        set languages(value: LanguageObject[]) {
+            pb_1.Message.setRepeatedWrapperField(this, 1, value);
+        }
+        static fromObject(data: {
+            languages?: ReturnType<typeof LanguageObject.prototype.toObject>[];
+        }): LanguagesResponse {
+            const message = new LanguagesResponse({});
+            if (data.languages != null) {
+                message.languages = data.languages.map(item => LanguageObject.fromObject(item));
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                languages?: ReturnType<typeof LanguageObject.prototype.toObject>[];
+            } = {};
+            if (this.languages != null) {
+                data.languages = this.languages.map((item: LanguageObject) => item.toObject());
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.languages.length)
+                writer.writeRepeatedMessage(1, this.languages, (item: LanguageObject) => item.serialize(writer));
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): LanguagesResponse {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new LanguagesResponse();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        reader.readMessage(message.languages, () => pb_1.Message.addToRepeatedWrapperField(message, 1, LanguageObject.deserialize(reader), LanguageObject));
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): LanguagesResponse {
+            return LanguagesResponse.deserialize(bytes);
+        }
+    }
     interface GrpcUnaryServiceInterface<P, R> {
         (message: P, metadata: grpc_1.Metadata, options: grpc_1.CallOptions, callback: grpc_1.requestCallback<R>): grpc_1.ClientUnaryCall;
         (message: P, metadata: grpc_1.Metadata, callback: grpc_1.requestCallback<R>): grpc_1.ClientUnaryCall;
@@ -676,6 +833,15 @@ export namespace language {
                 requestDeserialize: (bytes: Buffer) => GetLanguagesRequest.deserialize(new Uint8Array(bytes)),
                 responseSerialize: (message: PaginationResponse) => Buffer.from(message.serialize()),
                 responseDeserialize: (bytes: Buffer) => PaginationResponse.deserialize(new Uint8Array(bytes))
+            },
+            GetLanguagesByIds: {
+                path: "/language.LanguageService/GetLanguagesByIds",
+                requestStream: false,
+                responseStream: false,
+                requestSerialize: (message: GetLanguagesByIdsRequest) => Buffer.from(message.serialize()),
+                requestDeserialize: (bytes: Buffer) => GetLanguagesByIdsRequest.deserialize(new Uint8Array(bytes)),
+                responseSerialize: (message: LanguagesResponse) => Buffer.from(message.serialize()),
+                responseDeserialize: (bytes: Buffer) => LanguagesResponse.deserialize(new Uint8Array(bytes))
             },
             GetLanguage: {
                 path: "/language.LanguageService/GetLanguage",
@@ -725,6 +891,7 @@ export namespace language {
         };
         [method: string]: grpc_1.UntypedHandleCall;
         abstract GetLanguages(call: grpc_1.ServerUnaryCall<GetLanguagesRequest, PaginationResponse>, callback: grpc_1.sendUnaryData<PaginationResponse>): void;
+        abstract GetLanguagesByIds(call: grpc_1.ServerUnaryCall<GetLanguagesByIdsRequest, LanguagesResponse>, callback: grpc_1.sendUnaryData<LanguagesResponse>): void;
         abstract GetLanguage(call: grpc_1.ServerUnaryCall<dependency_1.common.IntIDRequest, LanguageObject>, callback: grpc_1.sendUnaryData<LanguageObject>): void;
         abstract CreateLanguage(call: grpc_1.ServerUnaryCall<CreateLanguageRequest, LanguageObject>, callback: grpc_1.sendUnaryData<LanguageObject>): void;
         abstract UpdateLanguage(call: grpc_1.ServerUnaryCall<UpdateLanguageRequest, LanguageObject>, callback: grpc_1.sendUnaryData<LanguageObject>): void;
@@ -737,6 +904,9 @@ export namespace language {
         }
         GetLanguages: GrpcUnaryServiceInterface<GetLanguagesRequest, PaginationResponse> = (message: GetLanguagesRequest, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<PaginationResponse>, options?: grpc_1.CallOptions | grpc_1.requestCallback<PaginationResponse>, callback?: grpc_1.requestCallback<PaginationResponse>): grpc_1.ClientUnaryCall => {
             return super.GetLanguages(message, metadata, options, callback);
+        };
+        GetLanguagesByIds: GrpcUnaryServiceInterface<GetLanguagesByIdsRequest, LanguagesResponse> = (message: GetLanguagesByIdsRequest, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<LanguagesResponse>, options?: grpc_1.CallOptions | grpc_1.requestCallback<LanguagesResponse>, callback?: grpc_1.requestCallback<LanguagesResponse>): grpc_1.ClientUnaryCall => {
+            return super.GetLanguagesByIds(message, metadata, options, callback);
         };
         GetLanguage: GrpcUnaryServiceInterface<dependency_1.common.IntIDRequest, LanguageObject> = (message: dependency_1.common.IntIDRequest, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<LanguageObject>, options?: grpc_1.CallOptions | grpc_1.requestCallback<LanguageObject>, callback?: grpc_1.requestCallback<LanguageObject>): grpc_1.ClientUnaryCall => {
             return super.GetLanguage(message, metadata, options, callback);

@@ -50,3 +50,34 @@ func (s *Server) GetLanguages(ctx context.Context, dto *GetLanguagesRequest) (*P
 		},
 	}, nil
 }
+
+func (s *Server) GetLanguagesByIds(ctx context.Context, dto *GetLanguagesByIdsRequest) (*LanguagesResponse, error) {
+	repo := &db.LanguageRepo{}
+
+	ids := make([]int, len(dto.Ids))
+	for i, id := range dto.Ids {
+		ids[i] = int(id)
+	}
+
+	languages, err := repo.GetLanguagesByIds(ctx, ids)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var languageObjects []*LanguageObject
+
+	for _, language := range languages {
+		languageObjects = append(languageObjects, &LanguageObject{
+			Id:        int32(language.ID),
+			Name:      language.Name,
+			Code:      language.Code,
+			CreatedAt: language.CreatedAt.UTC().Format(time.RFC3339),
+			UpdatedAt: language.UpdatedAt.UTC().Format(time.RFC3339),
+		})
+	}
+
+	return &LanguagesResponse{
+		Languages: languageObjects,
+	}, nil
+}

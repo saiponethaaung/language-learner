@@ -2,7 +2,8 @@
 
 import { admin } from "./gen/admin";
 import { common } from "./gen/common";
-import { AdminMeta, Client } from "./common_client";
+import { AdminMeta, Client, GRPC_ERROR_CODES } from "./common_client";
+import { ServiceError } from "@grpc/grpc-js";
 
 export const AdminClient = async () => {
   const client = await Client<admin.AdminServiceClient>(
@@ -45,7 +46,7 @@ export const AdminProfile = async () => {
   const meta = await AdminMeta();
   const client = await AdminClient();
 
-  let result: admin.AdminObject = new admin.AdminObject();
+  let result: admin.AdminObject | null = new admin.AdminObject();
 
   const emptyRequest = new common.EmptyRequest();
 
@@ -61,9 +62,16 @@ export const AdminProfile = async () => {
     .then((data) => {
       result = data as admin.AdminObject;
     })
-    .catch((err) => {
-      console.error(err);
-      return { status: false, messegae: "Failed" };
+    .catch(async (err: ServiceError) => {
+      if (GRPC_ERROR_CODES[err.code]) {
+        console.error(GRPC_ERROR_CODES[err.code]);
+
+        if (err.code === 16) {
+          result = null;
+        }
+      } else {
+        console.error({ status: false, messegae: "Failed" });
+      }
     });
 
   return result;

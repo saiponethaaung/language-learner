@@ -1,16 +1,19 @@
 import { PaginationObject } from "@app/utils/grpc/type/common";
+import { CourseObject } from "@app/utils/grpc/type/course";
 import { LanguageObject } from "@app/utils/grpc/type/language";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface LanguageState {
+interface CourseState {
   loading: boolean;
-  data: LanguageObject[];
+  data: CourseObject[];
+  languages: LanguageObject[];
   pagination: PaginationObject;
 }
 
-const initialState: LanguageState = {
+const initialState: CourseState = {
   loading: false,
   data: [],
+  languages: [],
   pagination: {
     page: 1,
     limit: 10,
@@ -19,19 +22,22 @@ const initialState: LanguageState = {
   },
 };
 
-const LanguageSlice = createSlice({
-  name: "language",
+const CourseSlice = createSlice({
+  name: "course",
   initialState: initialState,
   reducers: {
-    setLanguages(state, action: PayloadAction<LanguageObject[]>) {
+    setCourses(state, action: PayloadAction<CourseObject[]>) {
       state.data = action.payload;
     },
     setPagination(state, action: PayloadAction<PaginationObject>) {
       state.pagination = action.payload;
     },
+    setLanguages(state, action: PayloadAction<LanguageObject[]>) {
+      state.languages = action.payload;
+    },
   },
 });
 
-export const { setLanguages, setPagination } = LanguageSlice.actions;
+export const { setCourses, setPagination, setLanguages } = CourseSlice.actions;
 
-export const language = LanguageSlice.reducer;
+export const course = CourseSlice.reducer;

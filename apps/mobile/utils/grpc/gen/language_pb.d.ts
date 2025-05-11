@@ -10,6 +10,9 @@ export class GetLanguagesRequest extends jspb.Message {
   getLimit(): number;
   setLimit(value: number): GetLanguagesRequest;
 
+  getName(): string;
+  setName(value: string): GetLanguagesRequest;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetLanguagesRequest.AsObject;
   static toObject(includeInstance: boolean, msg: GetLanguagesRequest): GetLanguagesRequest.AsObject;
@@ -22,6 +25,7 @@ export namespace GetLanguagesRequest {
   export type AsObject = {
     page: number,
     limit: number,
+    name: string,
   }
 }
 
@@ -152,6 +156,46 @@ export namespace PaginationResponse {
   export type AsObject = {
     dataList: Array<LanguageObject.AsObject>,
     pagination?: common_pb.PaginationObject.AsObject,
+  }
+}
+
+export class GetLanguagesByIdsRequest extends jspb.Message {
+  getIdsList(): Array<number>;
+  setIdsList(value: Array<number>): GetLanguagesByIdsRequest;
+  clearIdsList(): GetLanguagesByIdsRequest;
+  addIds(value: number, index?: number): GetLanguagesByIdsRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetLanguagesByIdsRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetLanguagesByIdsRequest): GetLanguagesByIdsRequest.AsObject;
+  static serializeBinaryToWriter(message: GetLanguagesByIdsRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetLanguagesByIdsRequest;
+  static deserializeBinaryFromReader(message: GetLanguagesByIdsRequest, reader: jspb.BinaryReader): GetLanguagesByIdsRequest;
+}
+
+export namespace GetLanguagesByIdsRequest {
+  export type AsObject = {
+    idsList: Array<number>,
+  }
+}
+
+export class LanguagesResponse extends jspb.Message {
+  getLanguagesList(): Array<LanguageObject>;
+  setLanguagesList(value: Array<LanguageObject>): LanguagesResponse;
+  clearLanguagesList(): LanguagesResponse;
+  addLanguages(value?: LanguageObject, index?: number): LanguageObject;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): LanguagesResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: LanguagesResponse): LanguagesResponse.AsObject;
+  static serializeBinaryToWriter(message: LanguagesResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): LanguagesResponse;
+  static deserializeBinaryFromReader(message: LanguagesResponse, reader: jspb.BinaryReader): LanguagesResponse;
+}
+
+export namespace LanguagesResponse {
+  export type AsObject = {
+    languagesList: Array<LanguageObject.AsObject>,
   }
 }
 

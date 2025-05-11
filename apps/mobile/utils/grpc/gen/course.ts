@@ -7,58 +7,76 @@ import * as dependency_1 from "./common";
 import * as pb_1 from "google-protobuf";
 import * as grpc_1 from "@grpc/grpc-js";
 export namespace course {
-    export class CreateCourse extends pb_1.Message {
+    export class CreateCourseRequest extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            targetLanguageID?: number;
-            sourceLanguageID?: number;
+            languageID?: number;
+            courseLanguageID?: number;
+            name?: string;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
             if (!Array.isArray(data) && typeof data == "object") {
-                if ("targetLanguageID" in data && data.targetLanguageID != undefined) {
-                    this.targetLanguageID = data.targetLanguageID;
+                if ("languageID" in data && data.languageID != undefined) {
+                    this.languageID = data.languageID;
                 }
-                if ("sourceLanguageID" in data && data.sourceLanguageID != undefined) {
-                    this.sourceLanguageID = data.sourceLanguageID;
+                if ("courseLanguageID" in data && data.courseLanguageID != undefined) {
+                    this.courseLanguageID = data.courseLanguageID;
+                }
+                if ("name" in data && data.name != undefined) {
+                    this.name = data.name;
                 }
             }
         }
-        get targetLanguageID() {
+        get languageID() {
             return pb_1.Message.getFieldWithDefault(this, 1, 0) as number;
         }
-        set targetLanguageID(value: number) {
+        set languageID(value: number) {
             pb_1.Message.setField(this, 1, value);
         }
-        get sourceLanguageID() {
+        get courseLanguageID() {
             return pb_1.Message.getFieldWithDefault(this, 2, 0) as number;
         }
-        set sourceLanguageID(value: number) {
+        set courseLanguageID(value: number) {
             pb_1.Message.setField(this, 2, value);
         }
+        get name() {
+            return pb_1.Message.getFieldWithDefault(this, 3, "") as string;
+        }
+        set name(value: string) {
+            pb_1.Message.setField(this, 3, value);
+        }
         static fromObject(data: {
-            targetLanguageID?: number;
-            sourceLanguageID?: number;
-        }): CreateCourse {
-            const message = new CreateCourse({});
-            if (data.targetLanguageID != null) {
-                message.targetLanguageID = data.targetLanguageID;
+            languageID?: number;
+            courseLanguageID?: number;
+            name?: string;
+        }): CreateCourseRequest {
+            const message = new CreateCourseRequest({});
+            if (data.languageID != null) {
+                message.languageID = data.languageID;
             }
-            if (data.sourceLanguageID != null) {
-                message.sourceLanguageID = data.sourceLanguageID;
+            if (data.courseLanguageID != null) {
+                message.courseLanguageID = data.courseLanguageID;
+            }
+            if (data.name != null) {
+                message.name = data.name;
             }
             return message;
         }
         toObject() {
             const data: {
-                targetLanguageID?: number;
-                sourceLanguageID?: number;
+                languageID?: number;
+                courseLanguageID?: number;
+                name?: string;
             } = {};
-            if (this.targetLanguageID != null) {
-                data.targetLanguageID = this.targetLanguageID;
+            if (this.languageID != null) {
+                data.languageID = this.languageID;
             }
-            if (this.sourceLanguageID != null) {
-                data.sourceLanguageID = this.sourceLanguageID;
+            if (this.courseLanguageID != null) {
+                data.courseLanguageID = this.courseLanguageID;
+            }
+            if (this.name != null) {
+                data.name = this.name;
             }
             return data;
         }
@@ -66,24 +84,29 @@ export namespace course {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
-            if (this.targetLanguageID != 0)
-                writer.writeInt32(1, this.targetLanguageID);
-            if (this.sourceLanguageID != 0)
-                writer.writeInt32(2, this.sourceLanguageID);
+            if (this.languageID != 0)
+                writer.writeInt32(1, this.languageID);
+            if (this.courseLanguageID != 0)
+                writer.writeInt32(2, this.courseLanguageID);
+            if (this.name.length)
+                writer.writeString(3, this.name);
             if (!w)
                 return writer.getResultBuffer();
         }
-        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): CreateCourse {
-            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new CreateCourse();
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): CreateCourseRequest {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new CreateCourseRequest();
             while (reader.nextField()) {
                 if (reader.isEndGroup())
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        message.targetLanguageID = reader.readInt32();
+                        message.languageID = reader.readInt32();
                         break;
                     case 2:
-                        message.sourceLanguageID = reader.readInt32();
+                        message.courseLanguageID = reader.readInt32();
+                        break;
+                    case 3:
+                        message.name = reader.readString();
                         break;
                     default: reader.skipField();
                 }
@@ -93,80 +116,98 @@ export namespace course {
         serializeBinary(): Uint8Array {
             return this.serialize();
         }
-        static deserializeBinary(bytes: Uint8Array): CreateCourse {
-            return CreateCourse.deserialize(bytes);
+        static deserializeBinary(bytes: Uint8Array): CreateCourseRequest {
+            return CreateCourseRequest.deserialize(bytes);
         }
     }
-    export class UpdateCourse extends pb_1.Message {
+    export class UpdateCourseRequet extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            targetLanguageID?: number;
-            sourceLanguageID?: number;
-            status?: boolean;
+            languageID?: number;
+            courseLanguageID?: number;
+            status?: number;
+            name?: string;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
             if (!Array.isArray(data) && typeof data == "object") {
-                if ("targetLanguageID" in data && data.targetLanguageID != undefined) {
-                    this.targetLanguageID = data.targetLanguageID;
+                if ("languageID" in data && data.languageID != undefined) {
+                    this.languageID = data.languageID;
                 }
-                if ("sourceLanguageID" in data && data.sourceLanguageID != undefined) {
-                    this.sourceLanguageID = data.sourceLanguageID;
+                if ("courseLanguageID" in data && data.courseLanguageID != undefined) {
+                    this.courseLanguageID = data.courseLanguageID;
                 }
                 if ("status" in data && data.status != undefined) {
                     this.status = data.status;
                 }
+                if ("name" in data && data.name != undefined) {
+                    this.name = data.name;
+                }
             }
         }
-        get targetLanguageID() {
+        get languageID() {
             return pb_1.Message.getFieldWithDefault(this, 1, 0) as number;
         }
-        set targetLanguageID(value: number) {
+        set languageID(value: number) {
             pb_1.Message.setField(this, 1, value);
         }
-        get sourceLanguageID() {
+        get courseLanguageID() {
             return pb_1.Message.getFieldWithDefault(this, 2, 0) as number;
         }
-        set sourceLanguageID(value: number) {
+        set courseLanguageID(value: number) {
             pb_1.Message.setField(this, 2, value);
         }
         get status() {
-            return pb_1.Message.getFieldWithDefault(this, 3, false) as boolean;
+            return pb_1.Message.getFieldWithDefault(this, 3, 0) as number;
         }
-        set status(value: boolean) {
+        set status(value: number) {
             pb_1.Message.setField(this, 3, value);
         }
+        get name() {
+            return pb_1.Message.getFieldWithDefault(this, 4, "") as string;
+        }
+        set name(value: string) {
+            pb_1.Message.setField(this, 4, value);
+        }
         static fromObject(data: {
-            targetLanguageID?: number;
-            sourceLanguageID?: number;
-            status?: boolean;
-        }): UpdateCourse {
-            const message = new UpdateCourse({});
-            if (data.targetLanguageID != null) {
-                message.targetLanguageID = data.targetLanguageID;
+            languageID?: number;
+            courseLanguageID?: number;
+            status?: number;
+            name?: string;
+        }): UpdateCourseRequet {
+            const message = new UpdateCourseRequet({});
+            if (data.languageID != null) {
+                message.languageID = data.languageID;
             }
-            if (data.sourceLanguageID != null) {
-                message.sourceLanguageID = data.sourceLanguageID;
+            if (data.courseLanguageID != null) {
+                message.courseLanguageID = data.courseLanguageID;
             }
             if (data.status != null) {
                 message.status = data.status;
+            }
+            if (data.name != null) {
+                message.name = data.name;
             }
             return message;
         }
         toObject() {
             const data: {
-                targetLanguageID?: number;
-                sourceLanguageID?: number;
-                status?: boolean;
+                languageID?: number;
+                courseLanguageID?: number;
+                status?: number;
+                name?: string;
             } = {};
-            if (this.targetLanguageID != null) {
-                data.targetLanguageID = this.targetLanguageID;
+            if (this.languageID != null) {
+                data.languageID = this.languageID;
             }
-            if (this.sourceLanguageID != null) {
-                data.sourceLanguageID = this.sourceLanguageID;
+            if (this.courseLanguageID != null) {
+                data.courseLanguageID = this.courseLanguageID;
             }
             if (this.status != null) {
                 data.status = this.status;
+            }
+            if (this.name != null) {
+                data.name = this.name;
             }
             return data;
         }
@@ -174,29 +215,34 @@ export namespace course {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
-            if (this.targetLanguageID != 0)
-                writer.writeInt32(1, this.targetLanguageID);
-            if (this.sourceLanguageID != 0)
-                writer.writeInt32(2, this.sourceLanguageID);
-            if (this.status != false)
-                writer.writeBool(3, this.status);
+            if (this.languageID != 0)
+                writer.writeInt32(1, this.languageID);
+            if (this.courseLanguageID != 0)
+                writer.writeInt32(2, this.courseLanguageID);
+            if (this.status != 0)
+                writer.writeInt32(3, this.status);
+            if (this.name.length)
+                writer.writeString(4, this.name);
             if (!w)
                 return writer.getResultBuffer();
         }
-        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): UpdateCourse {
-            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new UpdateCourse();
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): UpdateCourseRequet {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new UpdateCourseRequet();
             while (reader.nextField()) {
                 if (reader.isEndGroup())
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        message.targetLanguageID = reader.readInt32();
+                        message.languageID = reader.readInt32();
                         break;
                     case 2:
-                        message.sourceLanguageID = reader.readInt32();
+                        message.courseLanguageID = reader.readInt32();
                         break;
                     case 3:
-                        message.status = reader.readBool();
+                        message.status = reader.readInt32();
+                        break;
+                    case 4:
+                        message.name = reader.readString();
                         break;
                     default: reader.skipField();
                 }
@@ -206,19 +252,20 @@ export namespace course {
         serializeBinary(): Uint8Array {
             return this.serialize();
         }
-        static deserializeBinary(bytes: Uint8Array): UpdateCourse {
-            return UpdateCourse.deserialize(bytes);
+        static deserializeBinary(bytes: Uint8Array): UpdateCourseRequet {
+            return UpdateCourseRequet.deserialize(bytes);
         }
     }
     export class CourseObject extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
             id?: number;
-            targetLanguageID?: number;
-            sourceLanguageID?: number;
-            status?: boolean;
+            languageID?: number;
+            courseLanguageID?: number;
+            status?: number;
             createdAt?: string;
             updatedAt?: string;
+            name?: string;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -226,11 +273,11 @@ export namespace course {
                 if ("id" in data && data.id != undefined) {
                     this.id = data.id;
                 }
-                if ("targetLanguageID" in data && data.targetLanguageID != undefined) {
-                    this.targetLanguageID = data.targetLanguageID;
+                if ("languageID" in data && data.languageID != undefined) {
+                    this.languageID = data.languageID;
                 }
-                if ("sourceLanguageID" in data && data.sourceLanguageID != undefined) {
-                    this.sourceLanguageID = data.sourceLanguageID;
+                if ("courseLanguageID" in data && data.courseLanguageID != undefined) {
+                    this.courseLanguageID = data.courseLanguageID;
                 }
                 if ("status" in data && data.status != undefined) {
                     this.status = data.status;
@@ -241,6 +288,9 @@ export namespace course {
                 if ("updatedAt" in data && data.updatedAt != undefined) {
                     this.updatedAt = data.updatedAt;
                 }
+                if ("name" in data && data.name != undefined) {
+                    this.name = data.name;
+                }
             }
         }
         get id() {
@@ -249,22 +299,22 @@ export namespace course {
         set id(value: number) {
             pb_1.Message.setField(this, 1, value);
         }
-        get targetLanguageID() {
+        get languageID() {
             return pb_1.Message.getFieldWithDefault(this, 2, 0) as number;
         }
-        set targetLanguageID(value: number) {
+        set languageID(value: number) {
             pb_1.Message.setField(this, 2, value);
         }
-        get sourceLanguageID() {
+        get courseLanguageID() {
             return pb_1.Message.getFieldWithDefault(this, 3, 0) as number;
         }
-        set sourceLanguageID(value: number) {
+        set courseLanguageID(value: number) {
             pb_1.Message.setField(this, 3, value);
         }
         get status() {
-            return pb_1.Message.getFieldWithDefault(this, 4, false) as boolean;
+            return pb_1.Message.getFieldWithDefault(this, 4, 0) as number;
         }
-        set status(value: boolean) {
+        set status(value: number) {
             pb_1.Message.setField(this, 4, value);
         }
         get createdAt() {
@@ -279,23 +329,30 @@ export namespace course {
         set updatedAt(value: string) {
             pb_1.Message.setField(this, 6, value);
         }
+        get name() {
+            return pb_1.Message.getFieldWithDefault(this, 7, "") as string;
+        }
+        set name(value: string) {
+            pb_1.Message.setField(this, 7, value);
+        }
         static fromObject(data: {
             id?: number;
-            targetLanguageID?: number;
-            sourceLanguageID?: number;
-            status?: boolean;
+            languageID?: number;
+            courseLanguageID?: number;
+            status?: number;
             createdAt?: string;
             updatedAt?: string;
+            name?: string;
         }): CourseObject {
             const message = new CourseObject({});
             if (data.id != null) {
                 message.id = data.id;
             }
-            if (data.targetLanguageID != null) {
-                message.targetLanguageID = data.targetLanguageID;
+            if (data.languageID != null) {
+                message.languageID = data.languageID;
             }
-            if (data.sourceLanguageID != null) {
-                message.sourceLanguageID = data.sourceLanguageID;
+            if (data.courseLanguageID != null) {
+                message.courseLanguageID = data.courseLanguageID;
             }
             if (data.status != null) {
                 message.status = data.status;
@@ -306,25 +363,29 @@ export namespace course {
             if (data.updatedAt != null) {
                 message.updatedAt = data.updatedAt;
             }
+            if (data.name != null) {
+                message.name = data.name;
+            }
             return message;
         }
         toObject() {
             const data: {
                 id?: number;
-                targetLanguageID?: number;
-                sourceLanguageID?: number;
-                status?: boolean;
+                languageID?: number;
+                courseLanguageID?: number;
+                status?: number;
                 createdAt?: string;
                 updatedAt?: string;
+                name?: string;
             } = {};
             if (this.id != null) {
                 data.id = this.id;
             }
-            if (this.targetLanguageID != null) {
-                data.targetLanguageID = this.targetLanguageID;
+            if (this.languageID != null) {
+                data.languageID = this.languageID;
             }
-            if (this.sourceLanguageID != null) {
-                data.sourceLanguageID = this.sourceLanguageID;
+            if (this.courseLanguageID != null) {
+                data.courseLanguageID = this.courseLanguageID;
             }
             if (this.status != null) {
                 data.status = this.status;
@@ -335,6 +396,9 @@ export namespace course {
             if (this.updatedAt != null) {
                 data.updatedAt = this.updatedAt;
             }
+            if (this.name != null) {
+                data.name = this.name;
+            }
             return data;
         }
         serialize(): Uint8Array;
@@ -343,16 +407,18 @@ export namespace course {
             const writer = w || new pb_1.BinaryWriter();
             if (this.id != 0)
                 writer.writeInt32(1, this.id);
-            if (this.targetLanguageID != 0)
-                writer.writeInt32(2, this.targetLanguageID);
-            if (this.sourceLanguageID != 0)
-                writer.writeInt32(3, this.sourceLanguageID);
-            if (this.status != false)
-                writer.writeBool(4, this.status);
+            if (this.languageID != 0)
+                writer.writeInt32(2, this.languageID);
+            if (this.courseLanguageID != 0)
+                writer.writeInt32(3, this.courseLanguageID);
+            if (this.status != 0)
+                writer.writeInt32(4, this.status);
             if (this.createdAt.length)
                 writer.writeString(5, this.createdAt);
             if (this.updatedAt.length)
                 writer.writeString(6, this.updatedAt);
+            if (this.name.length)
+                writer.writeString(7, this.name);
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -366,19 +432,22 @@ export namespace course {
                         message.id = reader.readInt32();
                         break;
                     case 2:
-                        message.targetLanguageID = reader.readInt32();
+                        message.languageID = reader.readInt32();
                         break;
                     case 3:
-                        message.sourceLanguageID = reader.readInt32();
+                        message.courseLanguageID = reader.readInt32();
                         break;
                     case 4:
-                        message.status = reader.readBool();
+                        message.status = reader.readInt32();
                         break;
                     case 5:
                         message.createdAt = reader.readString();
                         break;
                     case 6:
                         message.updatedAt = reader.readString();
+                        break;
+                    case 7:
+                        message.name = reader.readString();
                         break;
                     default: reader.skipField();
                 }
@@ -390,6 +459,189 @@ export namespace course {
         }
         static deserializeBinary(bytes: Uint8Array): CourseObject {
             return CourseObject.deserialize(bytes);
+        }
+    }
+    export class PaginationResponse extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            data?: CourseObject[];
+            pagination?: dependency_1.common.PaginationObject;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [1], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("data" in data && data.data != undefined) {
+                    this.data = data.data;
+                }
+                if ("pagination" in data && data.pagination != undefined) {
+                    this.pagination = data.pagination;
+                }
+            }
+        }
+        get data() {
+            return pb_1.Message.getRepeatedWrapperField(this, CourseObject, 1) as CourseObject[];
+        }
+        set data(value: CourseObject[]) {
+            pb_1.Message.setRepeatedWrapperField(this, 1, value);
+        }
+        get pagination() {
+            return pb_1.Message.getWrapperField(this, dependency_1.common.PaginationObject, 2) as dependency_1.common.PaginationObject;
+        }
+        set pagination(value: dependency_1.common.PaginationObject) {
+            pb_1.Message.setWrapperField(this, 2, value);
+        }
+        get has_pagination() {
+            return pb_1.Message.getField(this, 2) != null;
+        }
+        static fromObject(data: {
+            data?: ReturnType<typeof CourseObject.prototype.toObject>[];
+            pagination?: ReturnType<typeof dependency_1.common.PaginationObject.prototype.toObject>;
+        }): PaginationResponse {
+            const message = new PaginationResponse({});
+            if (data.data != null) {
+                message.data = data.data.map(item => CourseObject.fromObject(item));
+            }
+            if (data.pagination != null) {
+                message.pagination = dependency_1.common.PaginationObject.fromObject(data.pagination);
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                data?: ReturnType<typeof CourseObject.prototype.toObject>[];
+                pagination?: ReturnType<typeof dependency_1.common.PaginationObject.prototype.toObject>;
+            } = {};
+            if (this.data != null) {
+                data.data = this.data.map((item: CourseObject) => item.toObject());
+            }
+            if (this.pagination != null) {
+                data.pagination = this.pagination.toObject();
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.data.length)
+                writer.writeRepeatedMessage(1, this.data, (item: CourseObject) => item.serialize(writer));
+            if (this.has_pagination)
+                writer.writeMessage(2, this.pagination, () => this.pagination.serialize(writer));
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): PaginationResponse {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new PaginationResponse();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        reader.readMessage(message.data, () => pb_1.Message.addToRepeatedWrapperField(message, 1, CourseObject.deserialize(reader), CourseObject));
+                        break;
+                    case 2:
+                        reader.readMessage(message.pagination, () => message.pagination = dependency_1.common.PaginationObject.deserialize(reader));
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): PaginationResponse {
+            return PaginationResponse.deserialize(bytes);
+        }
+    }
+    export class GetCourseRequest extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            page?: number;
+            limit?: number;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("page" in data && data.page != undefined) {
+                    this.page = data.page;
+                }
+                if ("limit" in data && data.limit != undefined) {
+                    this.limit = data.limit;
+                }
+            }
+        }
+        get page() {
+            return pb_1.Message.getFieldWithDefault(this, 1, 0) as number;
+        }
+        set page(value: number) {
+            pb_1.Message.setField(this, 1, value);
+        }
+        get limit() {
+            return pb_1.Message.getFieldWithDefault(this, 2, 0) as number;
+        }
+        set limit(value: number) {
+            pb_1.Message.setField(this, 2, value);
+        }
+        static fromObject(data: {
+            page?: number;
+            limit?: number;
+        }): GetCourseRequest {
+            const message = new GetCourseRequest({});
+            if (data.page != null) {
+                message.page = data.page;
+            }
+            if (data.limit != null) {
+                message.limit = data.limit;
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                page?: number;
+                limit?: number;
+            } = {};
+            if (this.page != null) {
+                data.page = this.page;
+            }
+            if (this.limit != null) {
+                data.limit = this.limit;
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.page != 0)
+                writer.writeInt32(1, this.page);
+            if (this.limit != 0)
+                writer.writeInt32(2, this.limit);
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): GetCourseRequest {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new GetCourseRequest();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        message.page = reader.readInt32();
+                        break;
+                    case 2:
+                        message.limit = reader.readInt32();
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): GetCourseRequest {
+            return GetCourseRequest.deserialize(bytes);
         }
     }
     interface GrpcUnaryServiceInterface<P, R> {
@@ -422,8 +674,8 @@ export namespace course {
                 path: "/course.CourseService/Create",
                 requestStream: false,
                 responseStream: false,
-                requestSerialize: (message: CreateCourse) => Buffer.from(message.serialize()),
-                requestDeserialize: (bytes: Buffer) => CreateCourse.deserialize(new Uint8Array(bytes)),
+                requestSerialize: (message: CreateCourseRequest) => Buffer.from(message.serialize()),
+                requestDeserialize: (bytes: Buffer) => CreateCourseRequest.deserialize(new Uint8Array(bytes)),
                 responseSerialize: (message: CourseObject) => Buffer.from(message.serialize()),
                 responseDeserialize: (bytes: Buffer) => CourseObject.deserialize(new Uint8Array(bytes))
             },
@@ -440,17 +692,17 @@ export namespace course {
                 path: "/course.CourseService/GetAll",
                 requestStream: false,
                 responseStream: false,
-                requestSerialize: (message: dependency_1.common.EmptyRequest) => Buffer.from(message.serialize()),
-                requestDeserialize: (bytes: Buffer) => dependency_1.common.EmptyRequest.deserialize(new Uint8Array(bytes)),
-                responseSerialize: (message: CourseObject) => Buffer.from(message.serialize()),
-                responseDeserialize: (bytes: Buffer) => CourseObject.deserialize(new Uint8Array(bytes))
+                requestSerialize: (message: GetCourseRequest) => Buffer.from(message.serialize()),
+                requestDeserialize: (bytes: Buffer) => GetCourseRequest.deserialize(new Uint8Array(bytes)),
+                responseSerialize: (message: PaginationResponse) => Buffer.from(message.serialize()),
+                responseDeserialize: (bytes: Buffer) => PaginationResponse.deserialize(new Uint8Array(bytes))
             },
             Update: {
                 path: "/course.CourseService/Update",
                 requestStream: false,
                 responseStream: false,
-                requestSerialize: (message: UpdateCourse) => Buffer.from(message.serialize()),
-                requestDeserialize: (bytes: Buffer) => UpdateCourse.deserialize(new Uint8Array(bytes)),
+                requestSerialize: (message: UpdateCourseRequet) => Buffer.from(message.serialize()),
+                requestDeserialize: (bytes: Buffer) => UpdateCourseRequet.deserialize(new Uint8Array(bytes)),
                 responseSerialize: (message: CourseObject) => Buffer.from(message.serialize()),
                 responseDeserialize: (bytes: Buffer) => CourseObject.deserialize(new Uint8Array(bytes))
             },
@@ -465,26 +717,26 @@ export namespace course {
             }
         };
         [method: string]: grpc_1.UntypedHandleCall;
-        abstract Create(call: grpc_1.ServerUnaryCall<CreateCourse, CourseObject>, callback: grpc_1.sendUnaryData<CourseObject>): void;
+        abstract Create(call: grpc_1.ServerUnaryCall<CreateCourseRequest, CourseObject>, callback: grpc_1.sendUnaryData<CourseObject>): void;
         abstract Get(call: grpc_1.ServerUnaryCall<dependency_1.common.IntIDRequest, CourseObject>, callback: grpc_1.sendUnaryData<CourseObject>): void;
-        abstract GetAll(call: grpc_1.ServerUnaryCall<dependency_1.common.EmptyRequest, CourseObject>, callback: grpc_1.sendUnaryData<CourseObject>): void;
-        abstract Update(call: grpc_1.ServerUnaryCall<UpdateCourse, CourseObject>, callback: grpc_1.sendUnaryData<CourseObject>): void;
+        abstract GetAll(call: grpc_1.ServerUnaryCall<GetCourseRequest, PaginationResponse>, callback: grpc_1.sendUnaryData<PaginationResponse>): void;
+        abstract Update(call: grpc_1.ServerUnaryCall<UpdateCourseRequet, CourseObject>, callback: grpc_1.sendUnaryData<CourseObject>): void;
         abstract Delete(call: grpc_1.ServerUnaryCall<dependency_1.common.IDRequest, dependency_1.common.StatusResponse>, callback: grpc_1.sendUnaryData<dependency_1.common.StatusResponse>): void;
     }
     export class CourseServiceClient extends grpc_1.makeGenericClientConstructor(UnimplementedCourseServiceService.definition, "CourseService", {}) {
         constructor(address: string, credentials: grpc_1.ChannelCredentials, options?: Partial<grpc_1.ChannelOptions>) {
             super(address, credentials, options);
         }
-        Create: GrpcUnaryServiceInterface<CreateCourse, CourseObject> = (message: CreateCourse, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<CourseObject>, options?: grpc_1.CallOptions | grpc_1.requestCallback<CourseObject>, callback?: grpc_1.requestCallback<CourseObject>): grpc_1.ClientUnaryCall => {
+        Create: GrpcUnaryServiceInterface<CreateCourseRequest, CourseObject> = (message: CreateCourseRequest, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<CourseObject>, options?: grpc_1.CallOptions | grpc_1.requestCallback<CourseObject>, callback?: grpc_1.requestCallback<CourseObject>): grpc_1.ClientUnaryCall => {
             return super.Create(message, metadata, options, callback);
         };
         Get: GrpcUnaryServiceInterface<dependency_1.common.IntIDRequest, CourseObject> = (message: dependency_1.common.IntIDRequest, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<CourseObject>, options?: grpc_1.CallOptions | grpc_1.requestCallback<CourseObject>, callback?: grpc_1.requestCallback<CourseObject>): grpc_1.ClientUnaryCall => {
             return super.Get(message, metadata, options, callback);
         };
-        GetAll: GrpcUnaryServiceInterface<dependency_1.common.EmptyRequest, CourseObject> = (message: dependency_1.common.EmptyRequest, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<CourseObject>, options?: grpc_1.CallOptions | grpc_1.requestCallback<CourseObject>, callback?: grpc_1.requestCallback<CourseObject>): grpc_1.ClientUnaryCall => {
+        GetAll: GrpcUnaryServiceInterface<GetCourseRequest, PaginationResponse> = (message: GetCourseRequest, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<PaginationResponse>, options?: grpc_1.CallOptions | grpc_1.requestCallback<PaginationResponse>, callback?: grpc_1.requestCallback<PaginationResponse>): grpc_1.ClientUnaryCall => {
             return super.GetAll(message, metadata, options, callback);
         };
-        Update: GrpcUnaryServiceInterface<UpdateCourse, CourseObject> = (message: UpdateCourse, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<CourseObject>, options?: grpc_1.CallOptions | grpc_1.requestCallback<CourseObject>, callback?: grpc_1.requestCallback<CourseObject>): grpc_1.ClientUnaryCall => {
+        Update: GrpcUnaryServiceInterface<UpdateCourseRequet, CourseObject> = (message: UpdateCourseRequet, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<CourseObject>, options?: grpc_1.CallOptions | grpc_1.requestCallback<CourseObject>, callback?: grpc_1.requestCallback<CourseObject>): grpc_1.ClientUnaryCall => {
             return super.Update(message, metadata, options, callback);
         };
         Delete: GrpcUnaryServiceInterface<dependency_1.common.IDRequest, dependency_1.common.StatusResponse> = (message: dependency_1.common.IDRequest, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<dependency_1.common.StatusResponse>, options?: grpc_1.CallOptions | grpc_1.requestCallback<dependency_1.common.StatusResponse>, callback?: grpc_1.requestCallback<dependency_1.common.StatusResponse>): grpc_1.ClientUnaryCall => {

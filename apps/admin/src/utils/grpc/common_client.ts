@@ -1,5 +1,6 @@
 import * as grpc from "@grpc/grpc-js";
 import { cookies } from "next/headers";
+import { CookieKey } from "../enums/cookies";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function Client<T>(client: any): Promise<T> {
@@ -11,7 +12,7 @@ export async function Client<T>(client: any): Promise<T> {
 export const AdminMeta = async (): Promise<grpc.Metadata> => {
   const meta = new grpc.Metadata();
   const cookie = await cookies();
-  const token = cookie.get("access_token")?.value;
+  const token = cookie.get(CookieKey.ACCESS_TOKEN)?.value;
 
   if (token) {
     meta.add("authorization", "Bearer " + token);
@@ -133,8 +134,8 @@ export const GRPC_ERROR_CODES = {
   },
 };
 
-// // eslint-disable-next-line @typescript-eslint/no-explicit-any
-// function parseGrpcError(error: any) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// export function parseGrpcError(error: any) {
 //   if (!(error instanceof Error)) {
 //     return {
 //       type: "Unknown Error",

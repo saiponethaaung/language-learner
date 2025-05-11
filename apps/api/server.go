@@ -10,6 +10,7 @@ import (
 
 	"github.com/saiponethaaung/language-learner/apps/api/admin"
 	"github.com/saiponethaaung/language-learner/apps/api/common"
+	"github.com/saiponethaaung/language-learner/apps/api/course"
 	"github.com/saiponethaaung/language-learner/apps/api/db"
 	"github.com/saiponethaaung/language-learner/apps/api/language"
 	"github.com/saiponethaaung/language-learner/apps/api/user"
@@ -56,6 +57,10 @@ func main() {
 	// Register user Handler
 	userServer := user.Server{}
 	user.RegisterUserServiceServer(grpcServer, &userServer)
+
+	// Course Handler
+	courseServer := course.Server{}
+	course.RegisterCourseServiceServer(grpcServer, &courseServer)
 
 	fmt.Printf("Server started on port %s", port)
 

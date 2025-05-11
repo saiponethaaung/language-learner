@@ -5,30 +5,43 @@ import "common.proto";
 
 option go_package = "github.com/saiponethaaung/language-learner/apps/api/course";
 
-message CreateCourse {
-    int32 targetLanguageID = 1;
-    int32 sourceLanguageID = 2;
+message CreateCourseRequest {
+    int32 languageID = 1;
+    int32 courseLanguageID = 2;
+    string name = 3;
 }
 
-message UpdateCourse {
-    int32 targetLanguageID = 1;
-    int32 sourceLanguageID = 2;
-    bool status = 3;
+message UpdateCourseRequet {
+    int32 languageID = 1;
+    int32 courseLanguageID = 2;
+    int32 status = 3;
+    string name = 4;
 }
 
 message CourseObject {
     int32 id = 1;
-    int32 targetLanguageID = 2;
-    int32 sourceLanguageID = 3;
-    bool status = 4;
+    int32 languageID = 2;
+    int32 courseLanguageID = 3;
+    int32 status = 4;
     string createdAt = 5;
     string updatedAt = 6;
+    string name = 7;
+}
+
+message PaginationResponse {
+    repeated CourseObject data = 1;
+    common.PaginationObject pagination = 2;
+}
+
+message GetCourseRequest {
+    int32 page = 1;
+    int32 limit = 2;
 }
 
 service CourseService {
-    rpc Create(CreateCourse) returns (CourseObject) {}
+    rpc Create(CreateCourseRequest) returns (CourseObject) {}
     rpc Get(common.IntIDRequest) returns (CourseObject) {}
-    rpc GetAll(common.EmptyRequest) returns (CourseObject) {}
-    rpc Update(UpdateCourse) returns (CourseObject) {}
+    rpc GetAll(GetCourseRequest) returns (PaginationResponse) {}
+    rpc Update(UpdateCourseRequet) returns (CourseObject) {}
     rpc Delete(common.IDRequest) returns (common.StatusResponse) {}
 }

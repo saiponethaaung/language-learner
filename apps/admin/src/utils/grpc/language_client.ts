@@ -93,3 +93,39 @@ export const CreateLanguage = async (data: {
     };
   }
 };
+
+export const GetLanguagesByIds = async (data: {
+  ids: number[];
+}): Promise<ResponseInterface<language.LanguageObject[]>> => {
+  const meta = await AdminMeta();
+  const client = await LanguageClient();
+
+  const requestDTO = new language.GetLanguagesByIdsRequest(data);
+
+  try {
+    const result = await new Promise<language.LanguageObject[]>(
+      (resolve, reject) => {
+        client.GetLanguagesByIds(requestDTO, meta, (err, res) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(res?.toObject().languages as language.LanguageObject[]);
+          }
+        });
+      }
+    );
+
+    return {
+      status: true,
+      message: "",
+      data: result,
+    };
+  } catch (err) {
+    return {
+      status: false,
+      message: "Failed",
+      error:
+        GRPC_ERROR_CODES[(err as { code: keyof typeof GRPC_ERROR_CODES }).code],
+    };
+  }
+};

@@ -5,34 +5,47 @@
 // source: course.proto
 
 /* eslint-disable */
-import { type EmptyRequest, type IDRequest, type IntIDRequest, type StatusResponse } from "./common";
+import { type IDRequest, type IntIDRequest, type PaginationObject, type StatusResponse } from "./common";
 
 export const protobufPackage = "course";
 
-export interface CreateCourse {
-  targetLanguageID: number;
-  sourceLanguageID: number;
+export interface CreateCourseRequest {
+  languageID: number;
+  courseLanguageID: number;
+  name: string;
 }
 
-export interface UpdateCourse {
-  targetLanguageID: number;
-  sourceLanguageID: number;
-  status: boolean;
+export interface UpdateCourseRequet {
+  languageID: number;
+  courseLanguageID: number;
+  status: number;
+  name: string;
 }
 
 export interface CourseObject {
   id: number;
-  targetLanguageID: number;
-  sourceLanguageID: number;
-  status: boolean;
+  languageID: number;
+  courseLanguageID: number;
+  status: number;
   createdAt: string;
   updatedAt: string;
+  name: string;
+}
+
+export interface PaginationResponse {
+  data: CourseObject[];
+  pagination: PaginationObject | undefined;
+}
+
+export interface GetCourseRequest {
+  page: number;
+  limit: number;
 }
 
 export interface CourseService {
-  Create(request: CreateCourse): Promise<CourseObject>;
+  Create(request: CreateCourseRequest): Promise<CourseObject>;
   Get(request: IntIDRequest): Promise<CourseObject>;
-  GetAll(request: EmptyRequest): Promise<CourseObject>;
-  Update(request: UpdateCourse): Promise<CourseObject>;
+  GetAll(request: GetCourseRequest): Promise<PaginationResponse>;
+  Update(request: UpdateCourseRequet): Promise<CourseObject>;
   Delete(request: IDRequest): Promise<StatusResponse>;
 }

@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 // import { AdminProfile } from "../grpc/admin_client";
 import { Routes } from "../enums/routes";
 import { AdminProfile } from "../grpc/admin_client";
+import { CookieKey } from "../enums/cookies";
 
 export const getBaseUrl = async (headers: Headers) => {
   const host = headers.get("x-forwarded-host");
@@ -14,7 +15,7 @@ export const getBaseUrl = async (headers: Headers) => {
 
 export const checkSession = async () => {
   const cookie = await cookies();
-  const access_token = cookie.get("access_token")?.value;
+  const access_token = cookie.get(CookieKey.ACCESS_TOKEN)?.value;
 
   if (!access_token) {
     return redirect(Routes.Login);
@@ -24,14 +25,14 @@ export const checkSession = async () => {
     if (adminProfile) {
       return adminProfile;
     } else {
-      return redirect(Routes.Login);
+      return redirect(Routes.Logout);
     }
   }
 };
 
 export const checkGuest = async () => {
   const cookie = await cookies();
-  const access_token = cookie.get("access_token")?.value;
+  const access_token = cookie.get(CookieKey.ACCESS_TOKEN)?.value;
 
   if (access_token) {
     return redirect(Routes.Home);
@@ -52,9 +53,16 @@ export const setCookie = async (values: SetCookieProps): Promise<void> => {
   return;
 };
 
+export const deleteCookie = async (key: string): Promise<void> => {
+  const cookie = await cookies();
+  cookie.delete(key);
+
+  return;
+};
+
 export const logout = async () => {
   const cookie = await cookies();
-  cookie.delete("access_token");
+  await cookie.delete(CookieKey.ACCESS_TOKEN);
 
   redirect(Routes.Login);
 };

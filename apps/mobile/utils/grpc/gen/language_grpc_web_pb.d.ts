@@ -16,6 +16,13 @@ export class LanguageServiceClient {
                response: language_pb.PaginationResponse) => void
   ): grpcWeb.ClientReadableStream<language_pb.PaginationResponse>;
 
+  getLanguagesByIds(
+    request: language_pb.GetLanguagesByIdsRequest,
+    metadata: grpcWeb.Metadata | undefined,
+    callback: (err: grpcWeb.RpcError,
+               response: language_pb.LanguagesResponse) => void
+  ): grpcWeb.ClientReadableStream<language_pb.LanguagesResponse>;
+
   getLanguage(
     request: common_pb.IntIDRequest,
     metadata: grpcWeb.Metadata | undefined,
@@ -62,6 +69,11 @@ export class LanguageServicePromiseClient {
     request: language_pb.GetLanguagesRequest,
     metadata?: grpcWeb.Metadata
   ): Promise<language_pb.PaginationResponse>;
+
+  getLanguagesByIds(
+    request: language_pb.GetLanguagesByIdsRequest,
+    metadata?: grpcWeb.Metadata
+  ): Promise<language_pb.LanguagesResponse>;
 
   getLanguage(
     request: common_pb.IntIDRequest,

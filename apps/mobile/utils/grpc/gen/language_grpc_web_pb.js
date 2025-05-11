@@ -140,6 +140,67 @@ proto.language.LanguageServicePromiseClient.prototype.getLanguages =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
+ *   !proto.language.GetLanguagesByIdsRequest,
+ *   !proto.language.LanguagesResponse>}
+ */
+const methodDescriptor_LanguageService_GetLanguagesByIds = new grpc.web.MethodDescriptor(
+  '/language.LanguageService/GetLanguagesByIds',
+  grpc.web.MethodType.UNARY,
+  proto.language.GetLanguagesByIdsRequest,
+  proto.language.LanguagesResponse,
+  /**
+   * @param {!proto.language.GetLanguagesByIdsRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.language.LanguagesResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.language.GetLanguagesByIdsRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.language.LanguagesResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.language.LanguagesResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.language.LanguageServiceClient.prototype.getLanguagesByIds =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/language.LanguageService/GetLanguagesByIds',
+      request,
+      metadata || {},
+      methodDescriptor_LanguageService_GetLanguagesByIds,
+      callback);
+};
+
+
+/**
+ * @param {!proto.language.GetLanguagesByIdsRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.language.LanguagesResponse>}
+ *     Promise that resolves to the response
+ */
+proto.language.LanguageServicePromiseClient.prototype.getLanguagesByIds =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/language.LanguageService/GetLanguagesByIds',
+      request,
+      metadata || {},
+      methodDescriptor_LanguageService_GetLanguagesByIds);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
  *   !proto.common.IntIDRequest,
  *   !proto.language.LanguageObject>}
  */

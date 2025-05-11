@@ -9,5 +9,6 @@ interface IProps extends React.PropsWithChildren {
 
 export default function StoreProvider({ children, initialReduxState }: IProps) {
   const store = makeStore(initialReduxState);
+
   return <Provider store={store}>{children}</Provider>;
 }

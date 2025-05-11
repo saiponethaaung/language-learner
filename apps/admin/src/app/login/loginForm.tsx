@@ -14,6 +14,7 @@ import { setCookie } from "@app/utils/auth/auth";
 import { useRouter } from "next/navigation";
 import { useForm } from "@mantine/form";
 import { Routes } from "@app/utils/enums/routes";
+import { CookieKey } from "@app/utils/enums/cookies";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -46,7 +47,7 @@ export default function LoginForm() {
     const loginResponse = await AdminLogin(data);
 
     if (loginResponse.status) {
-      await setCookie({ access_token: loginResponse.accessToken });
+      await setCookie({ [CookieKey.ACCESS_TOKEN]: loginResponse.accessToken });
       router.push(Routes.Home);
     } else {
       setLoading(false);

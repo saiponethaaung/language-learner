@@ -8,6 +8,7 @@ option go_package = "github.com/saiponethaaung/language-learner/apps/api/languag
 message GetLanguagesRequest {
     int32 page = 1;
     int32 limit = 2;
+    string name = 3;
 }
 
 message CreateLanguageRequest {
@@ -39,8 +40,17 @@ message PaginationResponse {
     common.PaginationObject pagination = 2;
 }
 
+message GetLanguagesByIdsRequest {
+    repeated int32 ids = 1;
+}
+
+message LanguagesResponse {
+    repeated LanguageObject languages = 1;
+}
+
 service LanguageService {
     rpc GetLanguages(GetLanguagesRequest) returns (PaginationResponse) {}
+    rpc GetLanguagesByIds(GetLanguagesByIdsRequest) returns (LanguagesResponse) {}
     rpc GetLanguage(common.IntIDRequest) returns (LanguageObject) {}
     rpc CreateLanguage(CreateLanguageRequest) returns (LanguageObject) {}
     rpc UpdateLanguage(UpdateLanguageRequest) returns (LanguageObject) {}

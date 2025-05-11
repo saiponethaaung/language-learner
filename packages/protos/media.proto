@@ -1,0 +1,45 @@
+syntax = "proto3";
+package media;
+
+import "common.proto";
+
+option go_package = "github.com/saiponethaaung/language-learner/apps/api/media";
+
+message CreateMediaRequest {
+    int32 courseID = 1;
+    string name = 2;
+    string url = 3;
+}
+
+message UpdateMediaRequest {
+    int32 id = 1;
+    int32 courseID = 2;
+    string name = 3;
+    string url = 4;
+}
+
+message MediaObject {
+    int32 id = 1;
+    string name = 3;
+    string url = 4;
+    string createdAt = 5;
+    string updatedAt = 6;
+}
+
+message PaginationResponse {
+    repeated MediaObject data = 1;
+    common.PaginationObject pagination = 2;
+}
+
+message GetMediaRequest {
+    int32 page = 1;
+    int32 limit = 2;
+}
+
+service MediaService {
+    rpc Create(CreateMediaRequest) returns (MediaObject) {}
+    rpc Get(common.IntIDRequest) returns (MediaObject) {}
+    rpc GetAll(GetMediaRequest) returns (PaginationResponse) {}
+    rpc Update(UpdateMediaRequest) returns (MediaObject) {}
+    rpc Delete(common.IDRequest) returns (common.StatusResponse) {}
+}

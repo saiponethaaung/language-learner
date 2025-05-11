@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -99,9 +98,6 @@ func (a *LanguageRepo) GetLanguages(ctx context.Context, limit int, page int) ([
 		return []Language{}, err
 	}
 
-	fmt.Println("Rows")
-	fmt.Println(rows)
-
 	return languages, nil
 }
 
@@ -136,4 +132,25 @@ func (a *LanguageRepo) CountLanguage(ctx context.Context) (int, error) {
 	}
 
 	return count, nil
+}
+
+func (a *LanguageRepo) GetLanguagesByIds(ctx context.Context, ids []int) ([]Language, error) {
+	query := `SELECT id, name, code, status, created_at, updated_at, created_by, updated_by FROM language WHERE id = ANY($1)`
+
+	rows, err := Pool.Query(ctx, query, ids)
+
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return []Language{}, nil
+		}
+		return []Language{}, err
+	}
+
+	languages, err := pgx.CollectRows(rows, pgx.RowToStructByName[Language])
+
+	if err != nil {
+		return []Language{}, err
+	}
+
+	return languages, nil
 }

@@ -79,16 +79,16 @@ proto.course.CourseServicePromiseClient =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.course.CreateCourse,
+ *   !proto.course.CreateCourseRequest,
  *   !proto.course.CourseObject>}
  */
 const methodDescriptor_CourseService_Create = new grpc.web.MethodDescriptor(
   '/course.CourseService/Create',
   grpc.web.MethodType.UNARY,
-  proto.course.CreateCourse,
+  proto.course.CreateCourseRequest,
   proto.course.CourseObject,
   /**
-   * @param {!proto.course.CreateCourse} request
+   * @param {!proto.course.CreateCourseRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
@@ -99,7 +99,7 @@ const methodDescriptor_CourseService_Create = new grpc.web.MethodDescriptor(
 
 
 /**
- * @param {!proto.course.CreateCourse} request The
+ * @param {!proto.course.CreateCourseRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
@@ -120,7 +120,7 @@ proto.course.CourseServiceClient.prototype.create =
 
 
 /**
- * @param {!proto.course.CreateCourse} request The
+ * @param {!proto.course.CreateCourseRequest} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
@@ -201,33 +201,33 @@ proto.course.CourseServicePromiseClient.prototype.get =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.common.EmptyRequest,
- *   !proto.course.CourseObject>}
+ *   !proto.course.GetCourseRequest,
+ *   !proto.course.PaginationResponse>}
  */
 const methodDescriptor_CourseService_GetAll = new grpc.web.MethodDescriptor(
   '/course.CourseService/GetAll',
   grpc.web.MethodType.UNARY,
-  common_pb.EmptyRequest,
-  proto.course.CourseObject,
+  proto.course.GetCourseRequest,
+  proto.course.PaginationResponse,
   /**
-   * @param {!proto.common.EmptyRequest} request
+   * @param {!proto.course.GetCourseRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.course.CourseObject.deserializeBinary
+  proto.course.PaginationResponse.deserializeBinary
 );
 
 
 /**
- * @param {!proto.common.EmptyRequest} request The
+ * @param {!proto.course.GetCourseRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.course.CourseObject)}
+ * @param {function(?grpc.web.RpcError, ?proto.course.PaginationResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.course.CourseObject>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.course.PaginationResponse>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.course.CourseServiceClient.prototype.getAll =
@@ -242,11 +242,11 @@ proto.course.CourseServiceClient.prototype.getAll =
 
 
 /**
- * @param {!proto.common.EmptyRequest} request The
+ * @param {!proto.course.GetCourseRequest} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.course.CourseObject>}
+ * @return {!Promise<!proto.course.PaginationResponse>}
  *     Promise that resolves to the response
  */
 proto.course.CourseServicePromiseClient.prototype.getAll =
@@ -262,16 +262,16 @@ proto.course.CourseServicePromiseClient.prototype.getAll =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.course.UpdateCourse,
+ *   !proto.course.UpdateCourseRequet,
  *   !proto.course.CourseObject>}
  */
 const methodDescriptor_CourseService_Update = new grpc.web.MethodDescriptor(
   '/course.CourseService/Update',
   grpc.web.MethodType.UNARY,
-  proto.course.UpdateCourse,
+  proto.course.UpdateCourseRequet,
   proto.course.CourseObject,
   /**
-   * @param {!proto.course.UpdateCourse} request
+   * @param {!proto.course.UpdateCourseRequet} request
    * @return {!Uint8Array}
    */
   function(request) {
@@ -282,7 +282,7 @@ const methodDescriptor_CourseService_Update = new grpc.web.MethodDescriptor(
 
 
 /**
- * @param {!proto.course.UpdateCourse} request The
+ * @param {!proto.course.UpdateCourseRequet} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
@@ -303,7 +303,7 @@ proto.course.CourseServiceClient.prototype.update =
 
 
 /**
- * @param {!proto.course.UpdateCourse} request The
+ * @param {!proto.course.UpdateCourseRequet} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata

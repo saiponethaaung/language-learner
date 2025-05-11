@@ -1,5 +1,5 @@
 "use client";
-import PaginationLayout from "@app/components/layouts/pagination.layout";
+import PaginationLayout from "@app/components/layouts/pagination/pagination.layout";
 import {
   Button,
   Center,

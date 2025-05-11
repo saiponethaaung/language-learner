@@ -12,6 +12,7 @@ export const protobufPackage = "language";
 export interface GetLanguagesRequest {
   page: number;
   limit: number;
+  name: string;
 }
 
 export interface CreateLanguageRequest {
@@ -43,8 +44,17 @@ export interface PaginationResponse {
   pagination: PaginationObject | undefined;
 }
 
+export interface GetLanguagesByIdsRequest {
+  ids: number[];
+}
+
+export interface LanguagesResponse {
+  languages: LanguageObject[];
+}
+
 export interface LanguageService {
   GetLanguages(request: GetLanguagesRequest): Promise<PaginationResponse>;
+  GetLanguagesByIds(request: GetLanguagesByIdsRequest): Promise<LanguagesResponse>;
   GetLanguage(request: IntIDRequest): Promise<LanguageObject>;
   CreateLanguage(request: CreateLanguageRequest): Promise<LanguageObject>;
   UpdateLanguage(request: UpdateLanguageRequest): Promise<LanguageObject>;

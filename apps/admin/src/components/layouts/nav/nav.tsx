@@ -12,6 +12,8 @@ import Image from "next/image";
 import { logout } from "@utils/auth/auth";
 import { Routes } from "@app/utils/enums/routes";
 import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
+import { useAppSelector } from "@app/utils/store/store";
 
 const mainLinksMockdata = [
   { icon: IconDeviceDesktopAnalytics, label: "Home", link: Routes.Home },
@@ -24,12 +26,11 @@ const mainLinksMockdata = [
   // { icon: IconFingerprint, label: "Security" },
 ];
 
-const linksMockdata = [""];
-
 export function AppNavbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [activeLink, setActiveLink] = useState("Security");
+  const state = useAppSelector((state) => state.nav);
 
   const mainLinks = mainLinksMockdata.map((link) => (
     <Tooltip
@@ -51,24 +52,28 @@ export function AppNavbar() {
     </Tooltip>
   ));
 
-  const links = linksMockdata.map((link) => (
-    <a
-      className={classes.link}
-      data-active={activeLink === link || undefined}
-      href="#"
-      onClick={(event) => {
-        event.preventDefault();
-        setActiveLink(link);
-      }}
-      key={link}
-    >
-      {link}
-    </a>
-  ));
+  const links = () => {
+    const links = state.links[pathname];
+
+    if (!links) return [];
+
+    return links.map((link) => (
+      <Link
+        href={link.href}
+        key={link.title}
+        data-active={link.href === pathname.split("/")[2] || undefined}
+        className={classes.link}
+      >
+        {link.title}
+      </Link>
+    ));
+  };
 
   const activeTab = () => {
+    const activeNav = pathname.split("/")[1];
+
     return mainLinksMockdata.filter(
-      (link) => link.link.indexOf(pathname) > -1
+      (link) => link.link.indexOf(activeNav) > -1
     )[0].label;
   };
 
@@ -108,7 +113,7 @@ export function AppNavbar() {
             {activeTab()}
           </Title>
 
-          {links}
+          {links()}
         </div>
       </div>
     </nav>

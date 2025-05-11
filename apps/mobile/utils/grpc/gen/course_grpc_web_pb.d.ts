@@ -10,7 +10,7 @@ export class CourseServiceClient {
                options?: null | { [index: string]: any; });
 
   create(
-    request: course_pb.CreateCourse,
+    request: course_pb.CreateCourseRequest,
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.RpcError,
                response: course_pb.CourseObject) => void
@@ -24,14 +24,14 @@ export class CourseServiceClient {
   ): grpcWeb.ClientReadableStream<course_pb.CourseObject>;
 
   getAll(
-    request: common_pb.EmptyRequest,
+    request: course_pb.GetCourseRequest,
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.RpcError,
-               response: course_pb.CourseObject) => void
-  ): grpcWeb.ClientReadableStream<course_pb.CourseObject>;
+               response: course_pb.PaginationResponse) => void
+  ): grpcWeb.ClientReadableStream<course_pb.PaginationResponse>;
 
   update(
-    request: course_pb.UpdateCourse,
+    request: course_pb.UpdateCourseRequet,
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.RpcError,
                response: course_pb.CourseObject) => void
@@ -52,7 +52,7 @@ export class CourseServicePromiseClient {
                options?: null | { [index: string]: any; });
 
   create(
-    request: course_pb.CreateCourse,
+    request: course_pb.CreateCourseRequest,
     metadata?: grpcWeb.Metadata
   ): Promise<course_pb.CourseObject>;
 
@@ -62,12 +62,12 @@ export class CourseServicePromiseClient {
   ): Promise<course_pb.CourseObject>;
 
   getAll(
-    request: common_pb.EmptyRequest,
+    request: course_pb.GetCourseRequest,
     metadata?: grpcWeb.Metadata
-  ): Promise<course_pb.CourseObject>;
+  ): Promise<course_pb.PaginationResponse>;
 
   update(
-    request: course_pb.UpdateCourse,
+    request: course_pb.UpdateCourseRequet,
     metadata?: grpcWeb.Metadata
   ): Promise<course_pb.CourseObject>;
 
