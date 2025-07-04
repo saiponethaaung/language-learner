@@ -436,11 +436,21 @@ export namespace section {
                 requestDeserialize: (bytes: Buffer) => GetSectionRequest.deserialize(new Uint8Array(bytes)),
                 responseSerialize: (message: PaginationResponse) => Buffer.from(message.serialize()),
                 responseDeserialize: (bytes: Buffer) => PaginationResponse.deserialize(new Uint8Array(bytes))
+            },
+            Get: {
+                path: "/section.SectionService/Get",
+                requestStream: false,
+                responseStream: false,
+                requestSerialize: (message: dependency_1.common.IntIDRequest) => Buffer.from(message.serialize()),
+                requestDeserialize: (bytes: Buffer) => dependency_1.common.IntIDRequest.deserialize(new Uint8Array(bytes)),
+                responseSerialize: (message: SectionObject) => Buffer.from(message.serialize()),
+                responseDeserialize: (bytes: Buffer) => SectionObject.deserialize(new Uint8Array(bytes))
             }
         };
         [method: string]: grpc_1.UntypedHandleCall;
         abstract Create(call: grpc_1.ServerUnaryCall<CreateSectionRequest, SectionObject>, callback: grpc_1.sendUnaryData<SectionObject>): void;
         abstract GetAll(call: grpc_1.ServerUnaryCall<GetSectionRequest, PaginationResponse>, callback: grpc_1.sendUnaryData<PaginationResponse>): void;
+        abstract Get(call: grpc_1.ServerUnaryCall<dependency_1.common.IntIDRequest, SectionObject>, callback: grpc_1.sendUnaryData<SectionObject>): void;
     }
     export class SectionServiceClient extends grpc_1.makeGenericClientConstructor(UnimplementedSectionServiceService.definition, "SectionService", {}) {
         constructor(address: string, credentials: grpc_1.ChannelCredentials, options?: Partial<grpc_1.ChannelOptions>) {
@@ -451,6 +461,9 @@ export namespace section {
         };
         GetAll: GrpcUnaryServiceInterface<GetSectionRequest, PaginationResponse> = (message: GetSectionRequest, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<PaginationResponse>, options?: grpc_1.CallOptions | grpc_1.requestCallback<PaginationResponse>, callback?: grpc_1.requestCallback<PaginationResponse>): grpc_1.ClientUnaryCall => {
             return super.GetAll(message, metadata, options, callback);
+        };
+        Get: GrpcUnaryServiceInterface<dependency_1.common.IntIDRequest, SectionObject> = (message: dependency_1.common.IntIDRequest, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<SectionObject>, options?: grpc_1.CallOptions | grpc_1.requestCallback<SectionObject>, callback?: grpc_1.requestCallback<SectionObject>): grpc_1.ClientUnaryCall => {
+            return super.Get(message, metadata, options, callback);
         };
     }
 }

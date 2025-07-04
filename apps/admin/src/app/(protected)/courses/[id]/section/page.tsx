@@ -10,6 +10,8 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { setPagination, setSections } from "./section.slice";
 import { SectionObject } from "@app/utils/grpc/type/section";
+import { Routes } from "@app/utils/enums/routes";
+import { setLinks } from "@app/components/layouts/nav/nav.slice";
 
 export default function ChapterList() {
   const { id } = useParams<{ id: string }>();
@@ -45,6 +47,15 @@ export default function ChapterList() {
     loadData(state.pagination.page);
   }, []);
 
+  useEffect(() => {
+    dispatch(
+      setLinks([
+        { title: "Section", href: Routes.Sections.replace(":id", id) },
+        { title: "Maetrial", href: Routes.Materials.replace(":id", id) },
+      ])
+    );
+  });
+
   return (
     <PaginationLayout
       total={0}
@@ -72,7 +83,9 @@ export default function ChapterList() {
           {
             name: "ID",
             selector: "id",
-            type: "text",
+            type: "link",
+            path: Routes.Section.replace(":id", id),
+            replaceKey: ":sectionID",
           },
           {
             name: "Name",

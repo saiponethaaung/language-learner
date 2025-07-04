@@ -8,6 +8,7 @@ package section
 
 import (
 	context "context"
+	common "github.com/saiponethaaung/language-learner/apps/api/common"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -21,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	SectionService_Create_FullMethodName = "/section.SectionService/Create"
 	SectionService_GetAll_FullMethodName = "/section.SectionService/GetAll"
+	SectionService_Get_FullMethodName    = "/section.SectionService/Get"
 )
 
 // SectionServiceClient is the client API for SectionService service.
@@ -29,6 +31,7 @@ const (
 type SectionServiceClient interface {
 	Create(ctx context.Context, in *CreateSectionRequest, opts ...grpc.CallOption) (*SectionObject, error)
 	GetAll(ctx context.Context, in *GetSectionRequest, opts ...grpc.CallOption) (*PaginationResponse, error)
+	Get(ctx context.Context, in *common.IntIDRequest, opts ...grpc.CallOption) (*SectionObject, error)
 }
 
 type sectionServiceClient struct {
@@ -59,12 +62,23 @@ func (c *sectionServiceClient) GetAll(ctx context.Context, in *GetSectionRequest
 	return out, nil
 }
 
+func (c *sectionServiceClient) Get(ctx context.Context, in *common.IntIDRequest, opts ...grpc.CallOption) (*SectionObject, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SectionObject)
+	err := c.cc.Invoke(ctx, SectionService_Get_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SectionServiceServer is the server API for SectionService service.
 // All implementations must embed UnimplementedSectionServiceServer
 // for forward compatibility.
 type SectionServiceServer interface {
 	Create(context.Context, *CreateSectionRequest) (*SectionObject, error)
 	GetAll(context.Context, *GetSectionRequest) (*PaginationResponse, error)
+	Get(context.Context, *common.IntIDRequest) (*SectionObject, error)
 	mustEmbedUnimplementedSectionServiceServer()
 }
 
@@ -80,6 +94,9 @@ func (UnimplementedSectionServiceServer) Create(context.Context, *CreateSectionR
 }
 func (UnimplementedSectionServiceServer) GetAll(context.Context, *GetSectionRequest) (*PaginationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
+}
+func (UnimplementedSectionServiceServer) Get(context.Context, *common.IntIDRequest) (*SectionObject, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedSectionServiceServer) mustEmbedUnimplementedSectionServiceServer() {}
 func (UnimplementedSectionServiceServer) testEmbeddedByValue()                        {}
@@ -138,6 +155,24 @@ func _SectionService_GetAll_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SectionService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(common.IntIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SectionServiceServer).Get(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SectionService_Get_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SectionServiceServer).Get(ctx, req.(*common.IntIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SectionService_ServiceDesc is the grpc.ServiceDesc for SectionService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -152,6 +187,10 @@ var SectionService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAll",
 			Handler:    _SectionService_GetAll_Handler,
+		},
+		{
+			MethodName: "Get",
+			Handler:    _SectionService_Get_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

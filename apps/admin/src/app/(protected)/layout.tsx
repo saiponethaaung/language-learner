@@ -1,11 +1,13 @@
 import styles from "./layout.module.scss";
 import { checkSession } from "@app/utils/auth/auth";
-import { Header } from "./header";
+import { Header } from "../../components/header/header";
 import makeStore from "@app/utils/store/store";
 import { setAdmin } from "@app/utils/store/auth.slice";
 import { redirect } from "next/navigation";
 import StoreProvider from "@app/utils/store/store_provider";
 import { AppNavbar } from "@app/components/layouts/nav/nav";
+import SideNav from "@app/components/layouts/sidenav/sidenav";
+import RouteListener from "@app/components/route-listener";
 
 export const dynamic = "force-dynamic";
 
@@ -26,13 +28,18 @@ export default async function RootLayout({
 
   return (
     <StoreProvider initialReduxState={store.getState()}>
-      <div className={styles.rootCon}>
-        <AppNavbar />
-        <div className={styles.content}>
-          <Header />
-          <main>{children}</main>
+      <RouteListener>
+        <div className={styles.rootCon}>
+          <AppNavbar />
+          <div className={styles.content}>
+            <Header />
+            <div className={styles.contentCon}>
+              <SideNav />
+              <main>{children}</main>
+            </div>
+          </div>
         </div>
-      </div>
+      </RouteListener>
     </StoreProvider>
   );
 }

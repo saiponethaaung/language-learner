@@ -198,5 +198,66 @@ proto.section.SectionServicePromiseClient.prototype.getAll =
 };
 
 
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.common.IntIDRequest,
+ *   !proto.section.SectionObject>}
+ */
+const methodDescriptor_SectionService_Get = new grpc.web.MethodDescriptor(
+  '/section.SectionService/Get',
+  grpc.web.MethodType.UNARY,
+  common_pb.IntIDRequest,
+  proto.section.SectionObject,
+  /**
+   * @param {!proto.common.IntIDRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.section.SectionObject.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.common.IntIDRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.section.SectionObject)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.section.SectionObject>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.section.SectionServiceClient.prototype.get =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/section.SectionService/Get',
+      request,
+      metadata || {},
+      methodDescriptor_SectionService_Get,
+      callback);
+};
+
+
+/**
+ * @param {!proto.common.IntIDRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.section.SectionObject>}
+ *     Promise that resolves to the response
+ */
+proto.section.SectionServicePromiseClient.prototype.get =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/section.SectionService/Get',
+      request,
+      metadata || {},
+      methodDescriptor_SectionService_Get);
+};
+
+
 module.exports = proto.section;
 

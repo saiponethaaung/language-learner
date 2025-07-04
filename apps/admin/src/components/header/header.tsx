@@ -7,10 +7,13 @@ import {
   Group,
   Menu,
   Text,
+  Title,
   UnstyledButton,
 } from "@mantine/core";
 import classes from "./header.module.scss";
 import { useAppSelector } from "@app/utils/store/store";
+import { usePathname } from "next/navigation";
+import { mainLinksMockdata } from "@app/utils/enums/navs";
 
 const user = {
   image:
@@ -18,11 +21,25 @@ const user = {
 };
 
 export function Header() {
+  const pathname = usePathname();
   const authState = useAppSelector((state) => state.auth);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
 
+  const activeTab = () => {
+    const activeNav = pathname.split("/")[1];
+
+    return mainLinksMockdata.filter(
+      (link) => link.link.indexOf(activeNav) > -1
+    )[0].label;
+  };
+
   return (
     <div className={classes.header}>
+      <div className={classes.main}>
+        <Title order={4} className={classes.title}>
+          {activeTab()}
+        </Title>
+      </div>
       <Container className={classes.mainSection} fluid={true}>
         <Group justify="flex-end">
           <Menu

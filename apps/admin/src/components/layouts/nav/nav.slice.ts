@@ -7,26 +7,20 @@ export interface NavLink {
 
 export interface NavState {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  links: {
-    [key: string]: NavLink[];
-  };
+  links: NavLink[];
 }
 
 const initialState: NavState = {
-  links: {},
+  links: [],
 };
 
 const authSlice = createSlice({
   name: "nav",
   initialState: initialState,
   reducers: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setLinks(
-      state,
-      action: PayloadAction<{ key: string; links: Array<NavLink> }>
-    ) {
-      state.links = {};
-      state.links[action.payload.key] = action.payload.links;
+    setLinks(state, action: PayloadAction<Array<NavLink>>) {
+      state.links = [];
+      state.links = action.payload;
     },
     resetNav(state) {
       for (const key in initialState) {

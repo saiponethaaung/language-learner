@@ -29,4 +29,5 @@ message GetSectionRequest {
 service SectionService {
     rpc Create(CreateSectionRequest) returns (SectionObject) {}
     rpc GetAll(GetSectionRequest) returns (PaginationResponse) {}
+    rpc Get(common.IntIDRequest) returns (SectionObject) {}
 }

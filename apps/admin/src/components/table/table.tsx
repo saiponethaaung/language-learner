@@ -1,4 +1,5 @@
 import { Table, Text } from "@mantine/core";
+import Link from "next/link";
 
 // interface ThProps {
 //   children: React.ReactNode;
@@ -32,7 +33,9 @@ import { Table, Text } from "@mantine/core";
 interface TableField {
   selector: string;
   name: string;
-  type: "text" | "number" | "date" | "boolean" | "id";
+  type: "text" | "number" | "date" | "boolean" | "id" | "link";
+  path?: string;
+  replaceKey?: string;
 }
 
 interface Props<T> {
@@ -41,6 +44,21 @@ interface Props<T> {
   loading: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const renderColumn = (id: string, value: any, column: TableField) => {
+  switch (column.type) {
+    case "link":
+      return (
+        <Link href={`${column.path?.replace(`${column?.replaceKey}`, id)}`}>
+          {value}
+        </Link>
+      );
+      break;
+  }
+  return value;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function CustomTable<T extends { id: number; [key: string]: any }>({
   columns,
   data,
@@ -63,9 +81,7 @@ function CustomTable<T extends { id: number; [key: string]: any }>({
                 const cellValue = item[column.selector];
                 return (
                   <Table.Td key={index}>
-                    {cellValue instanceof Date
-                      ? cellValue.toLocaleString()
-                      : cellValue}
+                    {renderColumn(item.id, cellValue, column)}
                   </Table.Td>
                 );
               })}

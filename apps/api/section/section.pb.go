@@ -257,10 +257,11 @@ const file_section_proto_rawDesc = "" +
 	"pagination\"=\n" +
 	"\x11GetSectionRequest\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x14\n" +
-	"\x05limit\x18\x02 \x01(\x05R\x05limit2\x98\x01\n" +
+	"\x05limit\x18\x02 \x01(\x05R\x05limit2\xcf\x01\n" +
 	"\x0eSectionService\x12A\n" +
 	"\x06Create\x12\x1d.section.CreateSectionRequest\x1a\x16.section.SectionObject\"\x00\x12C\n" +
-	"\x06GetAll\x12\x1a.section.GetSectionRequest\x1a\x1b.section.PaginationResponse\"\x00B=Z;github.com/saiponethaaung/language-learner/apps/api/sectionb\x06proto3"
+	"\x06GetAll\x12\x1a.section.GetSectionRequest\x1a\x1b.section.PaginationResponse\"\x00\x125\n" +
+	"\x03Get\x12\x14.common.IntIDRequest\x1a\x16.section.SectionObject\"\x00B=Z;github.com/saiponethaaung/language-learner/apps/api/sectionb\x06proto3"
 
 var (
 	file_section_proto_rawDescOnce sync.Once
@@ -281,16 +282,19 @@ var file_section_proto_goTypes = []any{
 	(*PaginationResponse)(nil),      // 2: section.PaginationResponse
 	(*GetSectionRequest)(nil),       // 3: section.GetSectionRequest
 	(*common.PaginationObject)(nil), // 4: common.PaginationObject
+	(*common.IntIDRequest)(nil),     // 5: common.IntIDRequest
 }
 var file_section_proto_depIdxs = []int32{
 	1, // 0: section.PaginationResponse.data:type_name -> section.SectionObject
 	4, // 1: section.PaginationResponse.pagination:type_name -> common.PaginationObject
 	0, // 2: section.SectionService.Create:input_type -> section.CreateSectionRequest
 	3, // 3: section.SectionService.GetAll:input_type -> section.GetSectionRequest
-	1, // 4: section.SectionService.Create:output_type -> section.SectionObject
-	2, // 5: section.SectionService.GetAll:output_type -> section.PaginationResponse
-	4, // [4:6] is the sub-list for method output_type
-	2, // [2:4] is the sub-list for method input_type
+	5, // 4: section.SectionService.Get:input_type -> common.IntIDRequest
+	1, // 5: section.SectionService.Create:output_type -> section.SectionObject
+	2, // 6: section.SectionService.GetAll:output_type -> section.PaginationResponse
+	1, // 7: section.SectionService.Get:output_type -> section.SectionObject
+	5, // [5:8] is the sub-list for method output_type
+	2, // [2:5] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
 	2, // [2:2] is the sub-list for extension extendee
 	0, // [0:2] is the sub-list for field type_name

@@ -6,6 +6,7 @@ import {
   GRPC_ERROR_CODES,
   ResponseInterface,
 } from "./common_client";
+import { common } from "./gen/common";
 import { section } from "./gen/section";
 
 export const SectionClient = async () => {
@@ -93,4 +94,38 @@ export const CreateSection = async (data: {
         GRPC_ERROR_CODES[(err as { code: keyof typeof GRPC_ERROR_CODES }).code],
     };
   }
+};
+
+export const GetSection = async (
+  id: number
+): Promise<ResponseInterface<section.SectionObject>> => {
+  const meta = await AdminMeta();
+  const client = await SectionClient();
+
+  let result: section.SectionObject = new section.SectionObject();
+
+  const requestDTO = new common.IntIDRequest({ id });
+
+  await new Promise((resolve, reject) => {
+    client.Get(requestDTO, meta, (err, res) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(res?.toObject());
+      }
+    });
+  })
+    .then((data) => {
+      result = data as section.SectionObject;
+    })
+    .catch((err) => {
+      console.error(err);
+      return { status: false, messegae: "Failed" };
+    });
+
+  return {
+    status: true,
+    message: "",
+    data: result,
+  };
 };

@@ -5,7 +5,7 @@
 // source: section.proto
 
 /* eslint-disable */
-import { type PaginationObject } from "./common";
+import { type IntIDRequest, type PaginationObject } from "./common";
 
 export const protobufPackage = "section";
 
@@ -33,4 +33,5 @@ export interface GetSectionRequest {
 export interface SectionService {
   Create(request: CreateSectionRequest): Promise<SectionObject>;
   GetAll(request: GetSectionRequest): Promise<PaginationResponse>;
+  Get(request: IntIDRequest): Promise<SectionObject>;
 }
