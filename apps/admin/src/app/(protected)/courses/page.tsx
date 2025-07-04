@@ -216,7 +216,7 @@ export default function CourseList() {
                 <Table.Td>
                   <Link
                     href={{
-                      pathname: `/courses/${course.id}/chapter`,
+                      pathname: `/courses/${course.id}/section`,
                     }}
                   >
                     {course.name}

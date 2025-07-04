@@ -8,6 +8,10 @@ import (
 
 type Server struct{}
 
+func (s *Server) mustEmbedUnimplementedCourseServiceServer() {
+	panic("unimplemented")
+}
+
 // Delete implements CourseServiceServer.
 func (s *Server) Delete(context.Context, *common.IDRequest) (*common.StatusResponse, error) {
 	panic("unimplemented")

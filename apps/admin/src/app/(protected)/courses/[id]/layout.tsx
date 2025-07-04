@@ -15,7 +15,8 @@ export default function CourseDetailLayout({ children }: PropsWithChildren) {
         key: pathname,
         links: [
           { title: "Section", href: "section" },
-          { title: "Chapter", href: "chapter" },
+          { title: "Unit", href: "unit" },
+          { title: "Lesson", href: "lesson" },
           { title: "Material", href: "material" },
         ],
       })

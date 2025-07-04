@@ -9,6 +9,10 @@ import (
 
 type Server struct{}
 
+func (s *Server) mustEmbedUnimplementedUserServiceServer() {
+	panic("unimplemented")
+}
+
 func (s *Server) Profile(ctx context.Context, req *common.EmptyRequest) (*UserObject, error) {
 	authInfo := ctx.Value(common.UserContextKey).(common.AuthInfo)
 

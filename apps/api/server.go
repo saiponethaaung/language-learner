@@ -13,6 +13,7 @@ import (
 	"github.com/saiponethaaung/language-learner/apps/api/course"
 	"github.com/saiponethaaung/language-learner/apps/api/db"
 	"github.com/saiponethaaung/language-learner/apps/api/language"
+	"github.com/saiponethaaung/language-learner/apps/api/section"
 	"github.com/saiponethaaung/language-learner/apps/api/user"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -61,6 +62,10 @@ func main() {
 	// Course Handler
 	courseServer := course.Server{}
 	course.RegisterCourseServiceServer(grpcServer, &courseServer)
+
+	// Section Handler
+	sectionServer := section.Server{}
+	section.RegisterSectionServiceServer(grpcServer, &sectionServer)
 
 	fmt.Printf("Server started on port %s", port)
 

@@ -7,3 +7,5 @@ dist
 docker-compose
 
 .turbo
+
+.DS_Store

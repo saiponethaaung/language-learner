@@ -3,14 +3,15 @@ import Link from "next/link";
 export default function ChapterList() {
   return (
     <>
-      Chapter list{" "}
+      Unit list
+      {/* Chapter list{" "}
       <Link
         href={{
           pathname: `section`,
         }}
       >
         Section
-      </Link>
+      </Link> */}
     </>
   );
 }

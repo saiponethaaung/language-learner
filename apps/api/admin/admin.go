@@ -9,6 +9,11 @@ import (
 
 type Server struct{}
 
+// mustEmbedUnimplementedAdminServiceServer implements AdminServiceServer.
+func (s *Server) mustEmbedUnimplementedAdminServiceServer() {
+	panic("unimplemented")
+}
+
 func (s *Server) Profile(ctx context.Context, req *common.EmptyRequest) (*AdminObject, error) {
 	authInfo := ctx.Value(common.UserContextKey).(common.AuthInfo)
 

@@ -32,25 +32,30 @@ export function AppNavbar() {
   const [activeLink, setActiveLink] = useState("Security");
   const state = useAppSelector((state) => state.nav);
 
-  const mainLinks = mainLinksMockdata.map((link) => (
-    <Tooltip
-      label={link.label}
-      position="right"
-      withArrow
-      transitionProps={{ duration: 0 }}
-      key={link.label}
-    >
-      <UnstyledButton
-        onClick={() => {
-          router.push(link.link);
-        }}
-        className={classes.mainLink}
-        data-active={link.link === pathname || undefined}
+  const mainLinks = mainLinksMockdata.map((link) => {
+    const path = pathname.split("/")[1];
+    const linkPath = link.link.split("/")[1];
+
+    return (
+      <Tooltip
+        label={link.label}
+        position="right"
+        withArrow
+        transitionProps={{ duration: 0 }}
+        key={link.label}
       >
-        <link.icon size={22} stroke={1.5} />
-      </UnstyledButton>
-    </Tooltip>
-  ));
+        <UnstyledButton
+          onClick={() => {
+            router.push(link.link);
+          }}
+          className={classes.mainLink}
+          data-active={path === linkPath || undefined}
+        >
+          <link.icon size={22} stroke={1.5} />
+        </UnstyledButton>
+      </Tooltip>
+    );
+  });
 
   const links = () => {
     const links = state.links[pathname];

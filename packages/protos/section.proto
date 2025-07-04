@@ -1,7 +1,32 @@
 syntax = "proto3";
-
 package section;
+
+import "common.proto";
 
 option go_package = "github.com/saiponethaaung/language-learner/apps/api/section";
 
-service SectionService {}
+message CreateSectionRequest {
+    int32 courseID = 1;
+    string name = 3;
+}
+
+message SectionObject {
+    int32 id = 1;
+    string name = 2;
+    int32 courseID = 3;
+}
+
+message PaginationResponse {
+    repeated SectionObject data = 1;
+    common.PaginationObject pagination = 2;
+}
+
+message GetSectionRequest {
+    int32 page = 1;
+    int32 limit = 2;
+}
+
+service SectionService {
+    rpc Create(CreateSectionRequest) returns (SectionObject) {}
+    rpc GetAll(GetSectionRequest) returns (PaginationResponse) {}
+}

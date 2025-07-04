@@ -41,10 +41,18 @@ class GenerateProtos {
       }
 
       execSync(
-        `cd ../../ && protoc --go_out=plugins=grpc:${folderPath} --go_opt=paths=source_relative --proto_path=${protoPath} ${file}`
+        `cd ../../ && protoc --go_out=${folderPath} --go_opt=paths=source_relative --go-grpc_out=${folderPath} --go-grpc_opt=paths=source_relative --proto_path=${protoPath} ${file}`
       );
 
-      if (["admin.proto", "common.proto", "language.proto", "course.proto"].includes(file)) {
+      if (
+        [
+          "admin.proto",
+          "common.proto",
+          "language.proto",
+          "course.proto",
+          "section.proto",
+        ].includes(file)
+      ) {
         // generate proto handler
         let commands = "cd ../../";
         commands = `${commands} && protoc`;
@@ -60,7 +68,15 @@ class GenerateProtos {
         execSync(commands);
       }
 
-      if (["user.proto", "common.proto", "language.proto", "course.proto"].includes(file)) {
+      if (
+        [
+          "user.proto",
+          "common.proto",
+          "language.proto",
+          "course.proto",
+          "section.proto",
+        ].includes(file)
+      ) {
         let commands = "cd ../../";
         commands = `${commands} && protoc`;
         commands = `${commands} --plugin=protoc-gen-ts=${binPath}/protoc-gen-ts`;
@@ -68,7 +84,15 @@ class GenerateProtos {
         execSync(commands);
       }
 
-      if (["user.proto", "common.proto", "language.proto", "course.proto"].includes(file)) {
+      if (
+        [
+          "user.proto",
+          "common.proto",
+          "language.proto",
+          "course.proto",
+          "section.proto",
+        ].includes(file)
+      ) {
         // generate proto handler
         let commands = "cd ../../";
         commands = `${commands} && protoc`;
