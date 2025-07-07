@@ -6,15 +6,13 @@ import (
 	"time"
 
 	"github.com/saiponethaaung/language-learner/apps/api/common"
-	"github.com/saiponethaaung/language-learner/apps/api/db"
 )
 
 // GetAll implements CourseServiceServer.
 func (s *Server) GetAll(ctx context.Context, dto *GetCourseRequest) (*PaginationResponse, error) {
 	// authInfo := ctx.Value(common.UserContextKey).(common.AuthInfo)
-	repo := &db.CourseRepo{}
 
-	courses, err := repo.GetAllCourse(ctx, int(dto.Limit), int(dto.Page))
+	courses, err := s.courseRepo.GetAllCourse(ctx, int(dto.Limit), int(dto.Page))
 
 	if err != nil {
 		return nil, err
@@ -34,7 +32,7 @@ func (s *Server) GetAll(ctx context.Context, dto *GetCourseRequest) (*Pagination
 		})
 	}
 
-	total, err := repo.CountCourse(ctx)
+	total, err := s.courseRepo.CountCourse(ctx)
 
 	if err != nil {
 		return nil, err

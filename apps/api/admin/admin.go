@@ -5,9 +5,18 @@ import (
 	"time"
 
 	"github.com/saiponethaaung/language-learner/apps/api/common"
+	"github.com/saiponethaaung/language-learner/apps/api/db"
 )
 
-type Server struct{}
+type Server struct {
+	adminRepo db.AdminRepository
+}
+
+func NewAdminServer(adminRepo db.AdminRepository) *Server {
+	return &Server{
+		adminRepo: adminRepo,
+	}
+}
 
 // mustEmbedUnimplementedAdminServiceServer implements AdminServiceServer.
 func (s *Server) mustEmbedUnimplementedAdminServiceServer() {

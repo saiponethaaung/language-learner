@@ -4,16 +4,13 @@ import (
 	"context"
 
 	"github.com/saiponethaaung/language-learner/apps/api/common"
-	"github.com/saiponethaaung/language-learner/apps/api/db"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 // GetLanguage implements LanguageServiceServer.
 func (s *Server) GetLanguage(ctx context.Context, dto *common.IntIDRequest) (*LanguageObject, error) {
-	repo := &db.LanguageRepo{}
-
-	language, err := repo.GetLanguage(ctx, int(dto.Id))
+	language, err := s.languageRepo.GetLanguage(ctx, int(dto.Id))
 
 	// TODO handle error separately
 

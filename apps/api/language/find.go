@@ -6,14 +6,11 @@ import (
 	"time"
 
 	"github.com/saiponethaaung/language-learner/apps/api/common"
-	"github.com/saiponethaaung/language-learner/apps/api/db"
 )
 
 // GetLanguages implements LanguageServiceServer.
 func (s *Server) GetLanguages(ctx context.Context, dto *GetLanguagesRequest) (*PaginationResponse, error) {
-	repo := &db.LanguageRepo{}
-
-	languages, err := repo.GetLanguages(ctx, int(dto.Limit), int(dto.Page))
+	languages, err := s.languageRepo.GetLanguages(ctx, int(dto.Limit), int(dto.Page))
 
 	if err != nil {
 		return nil, err
@@ -31,7 +28,7 @@ func (s *Server) GetLanguages(ctx context.Context, dto *GetLanguagesRequest) (*P
 		})
 	}
 
-	total, err := repo.CountLanguage(ctx)
+	total, err := s.languageRepo.CountLanguage(ctx)
 
 	if err != nil {
 		// log.Fatal(err)
@@ -52,14 +49,13 @@ func (s *Server) GetLanguages(ctx context.Context, dto *GetLanguagesRequest) (*P
 }
 
 func (s *Server) GetLanguagesByIds(ctx context.Context, dto *GetLanguagesByIdsRequest) (*LanguagesResponse, error) {
-	repo := &db.LanguageRepo{}
 
 	ids := make([]int, len(dto.Ids))
 	for i, id := range dto.Ids {
 		ids[i] = int(id)
 	}
 
-	languages, err := repo.GetLanguagesByIds(ctx, ids)
+	languages, err := s.languageRepo.GetLanguagesByIds(ctx, ids)
 
 	if err != nil {
 		return nil, err

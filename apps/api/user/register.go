@@ -4,13 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/jackc/pgx/v5"
 	"github.com/saiponethaaung/language-learner/apps/api/common"
 	"github.com/saiponethaaung/language-learner/apps/api/db"
 )
 
 func (s *Server) Register(ctx context.Context, dto *RegisterRequest) (*RegisterResponse, error) {
-	repo := &db.UserRepo{}
 	message := &RegisterResponse{
 		Status: true,
 	}
@@ -22,8 +20,7 @@ func (s *Server) Register(ctx context.Context, dto *RegisterRequest) (*RegisterR
 		return message, nil
 	}
 
-	rows, _ := db.Pool.Query(ctx, `SELECT * FROM "user" where email=$1`, dto.Email)
-	userUser, _ := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[db.User])
+	userUser, _ := s.userRepo.GetUserByEmail(ctx, dto.Email)
 
 	if userUser.ID != 0 {
 		message.Status = false
@@ -41,7 +38,7 @@ func (s *Server) Register(ctx context.Context, dto *RegisterRequest) (*RegisterR
 		return nil, err
 	}
 
-	userID, err := repo.CreateUser(ctx, db.User{
+	userID, err := s.userRepo.CreateUser(ctx, db.User{
 		Name:     dto.Name,
 		Email:    dto.Email,
 		Password: password,

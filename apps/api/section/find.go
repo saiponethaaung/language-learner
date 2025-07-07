@@ -5,15 +5,13 @@ import (
 	"math"
 
 	"github.com/saiponethaaung/language-learner/apps/api/common"
-	"github.com/saiponethaaung/language-learner/apps/api/db"
 )
 
 // GetAll implements SectionServiceServer.
 func (s *Server) GetAll(ctx context.Context, dto *GetSectionRequest) (*PaginationResponse, error) {
 	// authInfo := ctx.Value(common.UserContextKey).(common.AuthInfo)
-	repo := &db.SectionRepo{}
 
-	sections, err := repo.GetAllSection(ctx, int(dto.Limit), int(dto.Page))
+	sections, err := s.sectionRepo.GetAllSection(ctx, int(dto.Limit), int(dto.Page))
 
 	if err != nil {
 		return nil, err
@@ -29,7 +27,7 @@ func (s *Server) GetAll(ctx context.Context, dto *GetSectionRequest) (*Paginatio
 		})
 	}
 
-	total, err := repo.CountSection(ctx)
+	total, err := s.sectionRepo.CountSection(ctx)
 
 	if err != nil {
 		return nil, err

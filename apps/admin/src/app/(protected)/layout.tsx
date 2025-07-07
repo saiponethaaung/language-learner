@@ -6,7 +6,6 @@ import { setAdmin } from "@app/utils/store/auth.slice";
 import { redirect } from "next/navigation";
 import StoreProvider from "@app/utils/store/store_provider";
 import { AppNavbar } from "@app/components/layouts/nav/nav";
-import SideNav from "@app/components/layouts/sidenav/sidenav";
 import RouteListener from "@app/components/route-listener";
 
 export const dynamic = "force-dynamic";
@@ -34,7 +33,6 @@ export default async function RootLayout({
           <div className={styles.content}>
             <Header />
             <div className={styles.contentCon}>
-              <SideNav />
               <main>{children}</main>
             </div>
           </div>

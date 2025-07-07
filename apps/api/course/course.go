@@ -4,9 +4,20 @@ import (
 	"context"
 
 	"github.com/saiponethaaung/language-learner/apps/api/common"
+	"github.com/saiponethaaung/language-learner/apps/api/db"
 )
 
-type Server struct{}
+type Server struct {
+	courseRepo   db.CourseRepository
+	languageRepo db.LanguageRepository
+}
+
+func NewCourseServer(courseRepo db.CourseRepository, languageRepo db.LanguageRepository) *Server {
+	return &Server{
+		courseRepo:   courseRepo,
+		languageRepo: languageRepo,
+	}
+}
 
 func (s *Server) mustEmbedUnimplementedCourseServiceServer() {
 	panic("unimplemented")

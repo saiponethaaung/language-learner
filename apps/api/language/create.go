@@ -12,16 +12,15 @@ import (
 
 func (s *Server) CreateLanguage(ctx context.Context, dto *CreateLanguageRequest) (*LanguageObject, error) {
 	authInfo := ctx.Value(common.UserContextKey).(common.AuthInfo)
-	repo := &db.LanguageRepo{}
 
 	// Check language is already exists or not
-	languageCheck, _ := repo.GetLanguageByCode(ctx, dto.Code)
+	languageCheck, _ := s.languageRepo.GetLanguageByCode(ctx, dto.Code)
 
 	if languageCheck.ID != 0 {
 		return nil, status.Error(codes.AlreadyExists, "Language already exists")
 	}
 
-	languageID, err := repo.CreateLanguage(ctx, db.Language{
+	languageID, err := s.languageRepo.CreateLanguage(ctx, db.Language{
 		Name:      dto.Name,
 		Code:      dto.Code,
 		CreatedBy: authInfo.Admin.ID,
@@ -31,7 +30,7 @@ func (s *Server) CreateLanguage(ctx context.Context, dto *CreateLanguageRequest)
 		return nil, err
 	}
 
-	language, _ := repo.GetLanguage(ctx, languageID)
+	language, _ := s.languageRepo.GetLanguage(ctx, languageID)
 
 	return &LanguageObject{
 		Id:        int32(language.ID),

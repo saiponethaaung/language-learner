@@ -5,9 +5,18 @@ import (
 	"time"
 
 	"github.com/saiponethaaung/language-learner/apps/api/common"
+	"github.com/saiponethaaung/language-learner/apps/api/db"
 )
 
-type Server struct{}
+type Server struct {
+	userRepo db.UserRepository
+}
+
+func NewUserServer(userRepo db.UserRepository) *Server {
+	return &Server{
+		userRepo: userRepo,
+	}
+}
 
 func (s *Server) mustEmbedUnimplementedUserServiceServer() {
 	panic("unimplemented")

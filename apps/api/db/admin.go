@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type Admin struct {
@@ -19,15 +20,29 @@ type Admin struct {
 	UpdatedAt time.Time `db:"updated_at"`
 }
 
-type AdminRepo struct{}
+type AdminRepository interface {
+	CreateAdmin(ctx context.Context, admin Admin) (int, error)
+	GetAdmin(ctx context.Context, id int) (Admin, error)
+	GetAdminByEmail(ctx context.Context, email string) (Admin, error)
+	UpdateAdmin(ctx context.Context, admin Admin) error
+	DeleteAdmin(ctx context.Context, id int) error
+}
+
+type AdminRepo struct {
+	Pool *pgxpool.Pool
+}
+
+func NewAdminRepo(dbPool *pgxpool.Pool) *AdminRepo {
+	return &AdminRepo{dbPool}
+}
 
 // CreateAdmin inserts a new admin into the database
-func (a *AdminRepo) CreateAdmin(ctx context.Context, admin Admin) (int, error) {
+func (adminRepo *AdminRepo) CreateAdmin(ctx context.Context, admin Admin) (int, error) {
 	query := `INSERT INTO admin (name, email, status, password) 
 	          VALUES ($1, $2, $3, $4) RETURNING id`
 
 	var id int
-	err := Pool.QueryRow(ctx, query, admin.Name, admin.Email, admin.Status, admin.Password).Scan(&id)
+	err := adminRepo.Pool.QueryRow(ctx, query, admin.Name, admin.Email, admin.Status, admin.Password).Scan(&id)
 
 	if err != nil {
 		return 0, err
@@ -37,13 +52,34 @@ func (a *AdminRepo) CreateAdmin(ctx context.Context, admin Admin) (int, error) {
 }
 
 // GetAdmin retrieves an admin by ID from the database
-func (a *AdminRepo) GetAdmin(ctx context.Context, id int) (Admin, error) {
+func (adminRepo *AdminRepo) GetAdmin(ctx context.Context, id int) (Admin, error) {
 	// args := []interface{}{}
 	// args = append(args, id)
 
 	query := `SELECT id, name, email, status, password, created_at, updated_at FROM admin WHERE id = $1`
 
-	rows, err := Pool.Query(ctx, query, id)
+	rows, err := adminRepo.Pool.Query(ctx, query, id)
+
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return Admin{}, nil
+		}
+		return Admin{}, err
+	}
+
+	admin, _ := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[Admin])
+
+	return admin, nil
+}
+
+// GetAdmin retrieves an admin by Email from the database
+func (adminRepo *AdminRepo) GetAdminByEmail(ctx context.Context, email string) (Admin, error) {
+	// args := []interface{}{}
+	// args = append(args, id)
+
+	query := `SELECT id, name, email, status, password, created_at, updated_at FROM admin WHERE email = $1`
+
+	rows, err := adminRepo.Pool.Query(ctx, query, email)
 
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -58,7 +94,7 @@ func (a *AdminRepo) GetAdmin(ctx context.Context, id int) (Admin, error) {
 }
 
 // UpdateAdmin updates an existing admin in the database
-func (a *AdminRepo) UpdateAdmin(ctx context.Context, admin Admin) error {
+func (adminRepo *AdminRepo) UpdateAdmin(ctx context.Context, admin Admin) error {
 	query := `UPDATE admin SET `
 	args := []interface{}{}
 	argID := 1
@@ -87,13 +123,13 @@ func (a *AdminRepo) UpdateAdmin(ctx context.Context, admin Admin) error {
 	query += `updated_at = $` + strconv.Itoa(argID) + ` WHERE id = $` + strconv.Itoa(argID+1)
 	args = append(args, time.Now(), admin.ID)
 
-	_, err := Pool.Exec(ctx, query, args...)
+	_, err := adminRepo.Pool.Exec(ctx, query, args...)
 	return err
 }
 
 // DeleteAdmin deletes an admin by ID from the database
-func (a *AdminRepo) DeleteAdmin(ctx context.Context, id int) error {
+func (adminRepo *AdminRepo) DeleteAdmin(ctx context.Context, id int) error {
 	query := `DELETE FROM admin WHERE id = $1`
-	_, err := Pool.Exec(ctx, query, id)
+	_, err := adminRepo.Pool.Exec(ctx, query, id)
 	return err
 }

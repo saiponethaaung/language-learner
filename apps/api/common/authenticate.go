@@ -22,8 +22,8 @@ type TokenData struct {
 
 type AuthInfo struct {
 	Type  string
-	User  db.User
-	Admin db.Admin
+	User  *db.User
+	Admin *db.Admin
 }
 
 type contextKey string
@@ -70,77 +70,91 @@ func ValidateJWT(tokenString string) (*TokenData, error) {
 	return claims, nil
 }
 
-func Authenticate(ctx context.Context,
-	req interface{},
-	info *grpc.UnaryServerInfo,
-	handler grpc.UnaryHandler) (interface{}, error) {
-	md, ok := metadata.FromIncomingContext(ctx)
+// AuthInterceptor holds the dependencies required for authentication.
+type AuthInterceptor struct {
+	adminRepo db.AdminRepository
+	userRepo  db.UserRepository
+}
 
-	excludedMethods := map[string]bool{"/admin.AdminService/Login": true, "/admin.AdminService/Register": true, "/user.UserService/Login": true, "/user.UserService/Register": true}
-
-	// Extract metadata from context
-	if !ok {
-		return nil, fmt.Errorf("missing metadata")
+// NewAuthInterceptor creates and returns a new AuthInterceptor instance.
+func NewAuthInterceptor(adminRepo db.AdminRepository, userRepo db.UserRepository) *AuthInterceptor {
+	return &AuthInterceptor{
+		adminRepo: adminRepo,
+		userRepo:  userRepo,
 	}
+}
 
-	if _, isSkipped := excludedMethods[info.FullMethod]; isSkipped {
+func (ai *AuthInterceptor) UnaryInterceptor() grpc.UnaryServerInterceptor {
+	return func(ctx context.Context,
+		req interface{},
+		info *grpc.UnaryServerInfo,
+		handler grpc.UnaryHandler) (interface{}, error) {
+		md, ok := metadata.FromIncomingContext(ctx)
+
+		excludedMethods := map[string]bool{"/admin.AdminService/Login": true, "/admin.AdminService/Register": true, "/user.UserService/Login": true, "/user.UserService/Register": true}
+
+		// Extract metadata from context
+		if !ok {
+			return nil, fmt.Errorf("missing metadata")
+		}
+
+		if _, isSkipped := excludedMethods[info.FullMethod]; isSkipped {
+			// Proceed with the request
+			return handler(ctx, req)
+		}
+
+		// Extract Authorization token
+		authHeader, exists := md["authorization"]
+		if !exists || len(authHeader) == 0 {
+			return nil, fmt.Errorf("authorization token required")
+		}
+
+		// Token format: "Bearer <token>"
+		tokenString := authHeader[0]
+		if len(tokenString) > 7 && tokenString[:7] == "Bearer " {
+			tokenString = tokenString[7:]
+		}
+
+		// Validate the JWT and extract user info
+		claims, err := ValidateJWT(tokenString)
+		if err != nil {
+			return nil, status.Errorf(codes.Unauthenticated, "invalid token: %v", err)
+		}
+
+		authInfo := AuthInfo{
+			Type: claims.Role,
+		}
+
+		if claims.Role == "admin" {
+			admin, err := ai.adminRepo.GetAdmin(ctx, claims.ID)
+
+			if err != nil {
+				return nil, status.Errorf(codes.Unauthenticated, "invalid token: %v", err)
+			}
+
+			authInfo.Admin = &admin
+
+			// Check if the user is authorized to access the method
+			// userOnly := map[string]bool{"/admin.AdminService/Login": true, "/admin.AdminService/Register": true, "/user.UserService/Login": true, "/user.UserService/Register": true}
+		}
+
+		if claims.Role == "user" {
+			user, err := ai.userRepo.GetUser(ctx, claims.ID)
+
+			if err != nil {
+				return nil, status.Errorf(codes.Unauthenticated, "invalid token: %v", err)
+			}
+
+			authInfo.User = &user
+
+			// Check if the user is authorized to access the method
+			// adminOnly := map[string]bool{"/admin.AdminService/Login": true, "/admin.AdminService/Register": true, "/user.UserService/Login": true, "/user.UserService/Register": true}
+		}
+
+		// Store user info in context
+		ctx = context.WithValue(ctx, UserContextKey, authInfo)
+
 		// Proceed with the request
 		return handler(ctx, req)
 	}
-
-	// Extract Authorization token
-	authHeader, exists := md["authorization"]
-	if !exists || len(authHeader) == 0 {
-		return nil, fmt.Errorf("authorization token required")
-	}
-
-	// Token format: "Bearer <token>"
-	tokenString := authHeader[0]
-	if len(tokenString) > 7 && tokenString[:7] == "Bearer " {
-		tokenString = tokenString[7:]
-	}
-
-	// Validate the JWT and extract user info
-	claims, err := ValidateJWT(tokenString)
-	if err != nil {
-		return nil, status.Errorf(codes.Unauthenticated, "invalid token: %v", err)
-	}
-
-	authInfo := AuthInfo{
-		Type: claims.Role,
-	}
-
-	if claims.Role == "admin" {
-		adminRepo := &db.AdminRepo{}
-		admin, err := adminRepo.GetAdmin(ctx, claims.ID)
-
-		if err != nil {
-			return nil, status.Errorf(codes.Unauthenticated, "invalid token: %v", err)
-		}
-
-		authInfo.Admin = admin
-
-		// Check if the user is authorized to access the method
-		// userOnly := map[string]bool{"/admin.AdminService/Login": true, "/admin.AdminService/Register": true, "/user.UserService/Login": true, "/user.UserService/Register": true}
-	}
-
-	if claims.Role == "user" {
-		userRepo := &db.UserRepo{}
-		user, err := userRepo.GetUser(ctx, claims.ID)
-
-		if err != nil {
-			return nil, status.Errorf(codes.Unauthenticated, "invalid token: %v", err)
-		}
-
-		authInfo.User = user
-
-		// Check if the user is authorized to access the method
-		// adminOnly := map[string]bool{"/admin.AdminService/Login": true, "/admin.AdminService/Register": true, "/user.UserService/Login": true, "/user.UserService/Register": true}
-	}
-
-	// Store user info in context
-	ctx = context.WithValue(ctx, UserContextKey, authInfo)
-
-	// Proceed with the request
-	return handler(ctx, req)
 }

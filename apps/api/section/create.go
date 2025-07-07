@@ -9,9 +9,8 @@ import (
 
 func (s *Server) Create(ctx context.Context, dto *CreateSectionRequest) (*SectionObject, error) {
 	authInfo := ctx.Value(common.UserContextKey).(common.AuthInfo)
-	repo := &db.SectionRepo{}
 
-	sectionID, err := repo.CreateSection(ctx, db.Section{
+	sectionID, err := s.sectionRepo.CreateSection(ctx, db.Section{
 		Name:      dto.Name,
 		CourseID:  int(dto.CourseID),
 		Status:    1,
@@ -24,7 +23,7 @@ func (s *Server) Create(ctx context.Context, dto *CreateSectionRequest) (*Sectio
 		common.LogError(&msg, err)
 	}
 
-	section, err := repo.GetSection(ctx, sectionID)
+	section, err := s.sectionRepo.GetSection(ctx, sectionID)
 
 	if err != nil {
 		msg := "Failed to create section"

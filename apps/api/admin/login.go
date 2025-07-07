@@ -4,9 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/jackc/pgx/v5"
 	"github.com/saiponethaaung/language-learner/apps/api/common"
-	"github.com/saiponethaaung/language-learner/apps/api/db"
 )
 
 func (s *Server) Login(ctx context.Context, dto *LoginRequest) (*LoginResponse, error) {
@@ -22,8 +20,8 @@ func (s *Server) Login(ctx context.Context, dto *LoginRequest) (*LoginResponse, 
 		return message, nil
 	}
 
-	rows, _ := db.Pool.Query(ctx, "SELECT * FROM admin where email=$1", dto.Email)
-	adminUser, _ := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[db.Admin])
+	// TODO add error handler
+	adminUser, _ := s.adminRepo.GetAdminByEmail(ctx, dto.Email)
 
 	if adminUser.ID == 0 || !common.VerifyPassword(dto.Password, adminUser.Password) {
 		message.Status = false

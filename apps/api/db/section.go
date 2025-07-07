@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type Section struct {
@@ -20,14 +21,28 @@ type Section struct {
 	UpdatedAt time.Time `db:"updated_at"`
 }
 
-type SectionRepo struct{}
+type SectionRepository interface {
+	CreateSection(ctx context.Context, section Section) (int, error)
+	GetSection(ctx context.Context, id int) (Section, error)
+	GetSectionByLanguage(ctx context.Context, sourceLanguage int, targetLanguage int) (Section, error)
+	GetAllSection(ctx context.Context, limit int, page int) ([]Section, error)
+	CountSection(ctx context.Context) (int, error)
+}
+
+type SectionRepo struct {
+	Pool *pgxpool.Pool
+}
+
+func NewSectionRepo(dbPool *pgxpool.Pool) *SectionRepo {
+	return &SectionRepo{dbPool}
+}
 
 // CreateSection inserts a new section into the database
-func (a *SectionRepo) CreateSection(ctx context.Context, section Section) (int, error) {
+func (sectionRepo *SectionRepo) CreateSection(ctx context.Context, section Section) (int, error) {
 	query := `INSERT INTO "section" ("order", name, status, course_id, created_by, updated_by) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`
 
 	var id int
-	err := Pool.QueryRow(ctx, query, section.Order, section.Name, section.Status, section.CourseID, section.CreatedBy, section.UpdatedBy).Scan(&id)
+	err := sectionRepo.Pool.QueryRow(ctx, query, section.Order, section.Name, section.Status, section.CourseID, section.CreatedBy, section.UpdatedBy).Scan(&id)
 
 	if err != nil {
 		return 0, err
@@ -37,10 +52,10 @@ func (a *SectionRepo) CreateSection(ctx context.Context, section Section) (int, 
 }
 
 // GetSection retrieves an Section by ID from the database
-func (a *SectionRepo) GetSection(ctx context.Context, id int) (Section, error) {
+func (sectionRepo *SectionRepo) GetSection(ctx context.Context, id int) (Section, error) {
 	query := `SELECT id, "order", name, status, course_id, created_by, updated_by, created_at, updated_at FROM "section" WHERE id = $1`
 
-	rows, err := Pool.Query(ctx, query, id)
+	rows, err := sectionRepo.Pool.Query(ctx, query, id)
 
 	if err != nil {
 		return Section{}, err
@@ -52,10 +67,10 @@ func (a *SectionRepo) GetSection(ctx context.Context, id int) (Section, error) {
 }
 
 // GetSection retrieves an Section by ID from the database
-func (a *SectionRepo) GetSectionByLanguage(ctx context.Context, sourceLanguage int, targetLanguage int) (Section, error) {
+func (sectionRepo *SectionRepo) GetSectionByLanguage(ctx context.Context, sourceLanguage int, targetLanguage int) (Section, error) {
 	query := `SELECT id, "order", name, status, course_id, created_by, updated_by, created_at, updated_at FROM "section" WHERE section_language_id = $1 AND language_id = $2`
 
-	rows, err := Pool.Query(ctx, query, sourceLanguage, targetLanguage)
+	rows, err := sectionRepo.Pool.Query(ctx, query, sourceLanguage, targetLanguage)
 
 	if err != nil {
 		return Section{}, err
@@ -67,10 +82,10 @@ func (a *SectionRepo) GetSectionByLanguage(ctx context.Context, sourceLanguage i
 }
 
 // GetSection retrieves all Section from the database
-func (a *SectionRepo) GetAllSection(ctx context.Context, limit int, page int) ([]Section, error) {
+func (sectionRepo *SectionRepo) GetAllSection(ctx context.Context, limit int, page int) ([]Section, error) {
 	query := `SELECT id, "order", name, status, course_id, created_by, updated_by, created_at, updated_at FROM "section" where 1=1 OFFSET $1 LIMIT $2`
 
-	rows, err := Pool.Query(ctx, query, (page-1)*limit, limit)
+	rows, err := sectionRepo.Pool.Query(ctx, query, (page-1)*limit, limit)
 
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -89,11 +104,11 @@ func (a *SectionRepo) GetAllSection(ctx context.Context, limit int, page int) ([
 }
 
 // CountSection retrieves all Section from the database
-func (a *SectionRepo) CountSection(ctx context.Context) (int, error) {
+func (sectionRepo *SectionRepo) CountSection(ctx context.Context) (int, error) {
 	query := `SELECT count(*) FROM "section" where 1=1`
 
 	var count int
-	err := Pool.QueryRow(ctx, query).Scan(&count)
+	err := sectionRepo.Pool.QueryRow(ctx, query).Scan(&count)
 
 	if err != nil {
 		return 0, err

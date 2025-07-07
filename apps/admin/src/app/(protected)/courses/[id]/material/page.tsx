@@ -1,23 +1,20 @@
 "use client";
 
-import { setLinks } from "@app/components/layouts/nav/nav.slice";
+import SideNav from "@app/components/layouts/sidenav/sidenav.layout";
 import { Routes } from "@app/utils/enums/routes";
-import { useAppDispatch } from "@app/utils/store/store";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
 
 export default function MaterialList() {
   const { id } = useParams<{ id: string }>();
-  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(
-      setLinks([
+  return (
+    <SideNav
+      links={[
         { title: "Section", href: Routes.Sections.replace(":id", id) },
-        { title: "Maetrial", href: Routes.Materials.replace(":id", id) },
-      ])
-    );
-  });
-
-  return <>Material list</>;
+        { title: "Material", href: Routes.Materials.replace(":id", id) },
+      ]}
+    >
+      Material list
+    </SideNav>
+  );
 }

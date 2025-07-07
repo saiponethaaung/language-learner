@@ -12,31 +12,29 @@ import (
 
 func (s *Server) Create(ctx context.Context, dto *CreateCourseRequest) (*CourseObject, error) {
 	authInfo := ctx.Value(common.UserContextKey).(common.AuthInfo)
-	repo := &db.CourseRepo{}
-	languageRepo := &db.LanguageRepo{}
 
 	// Check language is already exists or not
-	courseLanguage, _ := languageRepo.GetLanguage(ctx, int(dto.CourseLanguageID))
+	courseLanguage, _ := s.languageRepo.GetLanguage(ctx, int(dto.CourseLanguageID))
 
 	if courseLanguage.ID == 0 {
 		return nil, status.Error(codes.InvalidArgument, "Source language didn't exists")
 	}
 
 	// Check language is already exists or not
-	languageID, _ := languageRepo.GetLanguage(ctx, int(dto.LanguageID))
+	languageID, _ := s.languageRepo.GetLanguage(ctx, int(dto.LanguageID))
 
 	if languageID.ID == 0 {
 		return nil, status.Error(codes.InvalidArgument, "Target language didn't exists")
 	}
 
 	// Check course is already created or not
-	checkCourse, _ := repo.GetCourseByLanguage(ctx, int(dto.CourseLanguageID), int(dto.LanguageID))
+	checkCourse, _ := s.courseRepo.GetCourseByLanguage(ctx, int(dto.CourseLanguageID), int(dto.LanguageID))
 
 	if checkCourse.ID != 0 {
 		return nil, status.Error(codes.AlreadyExists, "Course already exists")
 	}
 
-	courseID, err := repo.CreateCourse(ctx, db.Course{
+	courseID, err := s.courseRepo.CreateCourse(ctx, db.Course{
 		Order:            1,
 		Status:           1,
 		Name:             dto.Name,
@@ -50,7 +48,7 @@ func (s *Server) Create(ctx context.Context, dto *CreateCourseRequest) (*CourseO
 		return nil, err
 	}
 
-	course, _ := repo.GetCourse(ctx, courseID)
+	course, _ := s.courseRepo.GetCourse(ctx, courseID)
 
 	return &CourseObject{
 		Id:               int32(course.ID),

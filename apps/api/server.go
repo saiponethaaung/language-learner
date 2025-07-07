@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
@@ -20,17 +21,26 @@ import (
 )
 
 func main() {
+	// Context for database initialization (e.g., with a timeout)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second) // Add time import
+
+	defer cancel()
 	// Setup DB
 	// fmt.Println("DB URL IS" + os.Getenv("DB_URL"))
-	dbCon, err := pgxpool.New(context.Background(), "postgres://root:root@localhost:5437/ll")
+	dbPool, err := pgxpool.New(ctx, "postgres://root:root@localhost:5437/ll")
 
 	if err != nil {
 		log.Fatal("Failed to start db connection, %v", err)
 	}
 
-	defer dbCon.Close()
+	defer dbPool.Close()
 
-	db.Pool = dbCon
+	// Ping the database to ensure connectivity
+	err = dbPool.Ping(ctx)
+	if err != nil {
+		log.Fatalf("Failed to ping database: %v", err)
+	}
+	log.Println("Successfully connected to database.")
 
 	// Setup GRPC
 	port := "0.0.0.0:9090"
@@ -41,31 +51,41 @@ func main() {
 		log.Fatal(errorMessage+", %v", err)
 	}
 
+	// Initialize repositories
+	adminRepo := db.NewAdminRepo(dbPool)
+	userRepo := db.NewUserRepo(dbPool)
+	langugeRepo := db.NewLanguageRepo(dbPool)
+	courseRepo := db.NewCourseRepo(dbPool)
+	sectionRepo := db.NewSectionRepo(dbPool)
+
+	// Auth interceptor
+	authInterceptor := common.NewAuthInterceptor(adminRepo, userRepo)
+
 	grpcServer := grpc.NewServer(
-		grpc.UnaryInterceptor(common.Authenticate),
+		grpc.UnaryInterceptor(authInterceptor.UnaryInterceptor()),
 	)
 
 	reflection.Register(grpcServer)
 
-	// Register admin Handler
-	adminServer := admin.Server{}
-	admin.RegisterAdminServiceServer(grpcServer, &adminServer)
+	// Admin Handler
+	adminServer := admin.NewAdminServer(adminRepo)
+	admin.RegisterAdminServiceServer(grpcServer, adminServer)
 
-	// Register language Handler
-	languageServer := language.Server{}
-	language.RegisterLanguageServiceServer(grpcServer, &languageServer)
+	// Language Handler
+	languageServer := language.NewLanguageServer(langugeRepo)
+	language.RegisterLanguageServiceServer(grpcServer, languageServer)
 
-	// Register user Handler
-	userServer := user.Server{}
-	user.RegisterUserServiceServer(grpcServer, &userServer)
+	// User Handler
+	userServer := user.NewUserServer(userRepo)
+	user.RegisterUserServiceServer(grpcServer, userServer)
 
 	// Course Handler
-	courseServer := course.Server{}
-	course.RegisterCourseServiceServer(grpcServer, &courseServer)
+	courseServer := course.NewCourseServer(courseRepo, langugeRepo)
+	course.RegisterCourseServiceServer(grpcServer, courseServer)
 
 	// Section Handler
-	sectionServer := section.Server{}
-	section.RegisterSectionServiceServer(grpcServer, &sectionServer)
+	sectionServer := section.NewSectionServer(sectionRepo)
+	section.RegisterSectionServiceServer(grpcServer, sectionServer)
 
 	fmt.Printf("Server started on port %s", port)
 

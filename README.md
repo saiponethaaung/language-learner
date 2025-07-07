@@ -13,12 +13,10 @@ AI job agent
 - [x] [Next](https://nextjs.org)
 - [ ] [Nest.js](https://nestjs.com)
 - [ ] [React Native](https://reactnative.dev)
-  <!-- - [ ] [flutter](https://flutter.dev) -->
-  <!-- - [ ] [ai sdk](https://ai-sdk.dev) -->
-  <!-- - [ ] [lang fuse](https://langfuse.com) -->
-  <!-- - [ ] [lang chain](https://www.langchain.com) -->
+- [ ] [ai sdk](https://ai-sdk.dev)
+- [ ] [lang fuse](https://langfuse.com)
+- [ ] [lang chain](https://www.langchain.com)
 - [x] [prisma](https://www.prisma.io)
-<!-- - [ ] [sciphi r2r](https://r2r-docs.sciphi.ai/introduction) -->
 - [ ] [Firebase](https://firebase.google.com/)
 - [x] [turbo repo](https://turborepo.com)
 - [x] [Mantine UI](https://mantine.dev/)
@@ -42,4 +40,5 @@ AI job agent
 
 - install protobuf
 - install `go install google.golang.org/protobuf/cmd/protoc-gen-go-grpc@latest`
+- install `go install google.golang.org/protobuf/cmd/protoc-gen-go@latest`
 - export PATH="$PATH:$(go env GOPATH)/bin"

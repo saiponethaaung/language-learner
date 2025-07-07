@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type User struct {
@@ -19,15 +20,29 @@ type User struct {
 	UpdatedAt time.Time `db:"updated_at"`
 }
 
-type UserRepo struct{}
+type UserRepository interface {
+	CreateUser(ctx context.Context, user User) (int, error)
+	GetUser(ctx context.Context, id int) (User, error)
+	GetUserByEmail(ctx context.Context, email string) (User, error)
+	UpdateUser(ctx context.Context, user User) error
+	DeleteUser(ctx context.Context, id int) error
+}
+
+type UserRepo struct {
+	Pool *pgxpool.Pool
+}
+
+func NewUserRepo(dbPool *pgxpool.Pool) *UserRepo {
+	return &UserRepo{dbPool}
+}
 
 // CreateUser inserts a new user into the database
-func (a *UserRepo) CreateUser(ctx context.Context, user User) (int, error) {
+func (userRepo *UserRepo) CreateUser(ctx context.Context, user User) (int, error) {
 	query := `INSERT INTO "user" (name, email, status, password) 
 	          VALUES ($1, $2, $3, $4) RETURNING id`
 
 	var id int
-	err := Pool.QueryRow(ctx, query, user.Name, user.Email, user.Status, user.Password).Scan(&id)
+	err := userRepo.Pool.QueryRow(ctx, query, user.Name, user.Email, user.Status, user.Password).Scan(&id)
 
 	if err != nil {
 		return 0, err
@@ -37,13 +52,34 @@ func (a *UserRepo) CreateUser(ctx context.Context, user User) (int, error) {
 }
 
 // GetUser retrieves an user by ID from the database
-func (a *UserRepo) GetUser(ctx context.Context, id int) (User, error) {
+func (userRepo *UserRepo) GetUser(ctx context.Context, id int) (User, error) {
 	// args := []interface{}{}
 	// args = append(args, id)
 
 	query := `SELECT id, name, email, status, password, created_at, updated_at FROM "user" WHERE id = $1`
 
-	rows, err := Pool.Query(ctx, query, id)
+	rows, err := userRepo.Pool.Query(ctx, query, id)
+
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return User{}, nil
+		}
+		return User{}, err
+	}
+
+	user, _ := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[User])
+
+	return user, nil
+}
+
+// GetUser retrieves an user by email from the database
+func (userRepo *UserRepo) GetUserByEmail(ctx context.Context, email string) (User, error) {
+	// args := []interface{}{}
+	// args = append(args, id)
+
+	query := `SELECT id, name, email, status, password, created_at, updated_at FROM "user" WHERE email = $1`
+
+	rows, err := userRepo.Pool.Query(ctx, query, email)
 
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -58,7 +94,7 @@ func (a *UserRepo) GetUser(ctx context.Context, id int) (User, error) {
 }
 
 // UpdateUser updates an existing user in the database
-func (a *UserRepo) UpdateUser(ctx context.Context, user User) error {
+func (userRepo *UserRepo) UpdateUser(ctx context.Context, user User) error {
 	query := `UPDATE "user" SET `
 	args := []interface{}{}
 	argID := 1
@@ -87,13 +123,13 @@ func (a *UserRepo) UpdateUser(ctx context.Context, user User) error {
 	query += `updated_at = $` + strconv.Itoa(argID) + ` WHERE id = $` + strconv.Itoa(argID+1)
 	args = append(args, time.Now(), user.ID)
 
-	_, err := Pool.Exec(ctx, query, args...)
+	_, err := userRepo.Pool.Exec(ctx, query, args...)
 	return err
 }
 
 // DeleteUser deletes an user by ID from the database
-func (a *UserRepo) DeleteUser(ctx context.Context, id int) error {
+func (userRepo *UserRepo) DeleteUser(ctx context.Context, id int) error {
 	query := `DELETE FROM "user" WHERE id = $1`
-	_, err := Pool.Exec(ctx, query, id)
+	_, err := userRepo.Pool.Exec(ctx, query, id)
 	return err
 }

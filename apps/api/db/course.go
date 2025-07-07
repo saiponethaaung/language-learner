@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type Course struct {
@@ -21,14 +22,28 @@ type Course struct {
 	UpdatedAt        time.Time `db:"updated_at"`
 }
 
-type CourseRepo struct{}
+type CourseRepository interface {
+	CreateCourse(ctx context.Context, course Course) (int, error)
+	GetCourse(ctx context.Context, id int) (Course, error)
+	GetCourseByLanguage(ctx context.Context, sourceLanguage int, targetLanguage int) (Course, error)
+	GetAllCourse(ctx context.Context, limit int, page int) ([]Course, error)
+	CountCourse(ctx context.Context) (int, error)
+}
+
+type CourseRepo struct {
+	Pool *pgxpool.Pool
+}
+
+func NewCourseRepo(dbPool *pgxpool.Pool) *CourseRepo {
+	return &CourseRepo{dbPool}
+}
 
 // CreateCourse inserts a new course into the database
-func (a *CourseRepo) CreateCourse(ctx context.Context, course Course) (int, error) {
+func (courseRepo *CourseRepo) CreateCourse(ctx context.Context, course Course) (int, error) {
 	query := `INSERT INTO "course" ("order", name, status, course_language_id, language_id, created_by, updated_by) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`
 
 	var id int
-	err := Pool.QueryRow(ctx, query, course.Order, course.Name, course.Status, course.CourseLanguageID, course.LanguageID, course.CreatedBy, course.UpdatedBy).Scan(&id)
+	err := courseRepo.Pool.QueryRow(ctx, query, course.Order, course.Name, course.Status, course.CourseLanguageID, course.LanguageID, course.CreatedBy, course.UpdatedBy).Scan(&id)
 
 	if err != nil {
 		return 0, err
@@ -38,10 +53,10 @@ func (a *CourseRepo) CreateCourse(ctx context.Context, course Course) (int, erro
 }
 
 // GetCourse retrieves an Course by ID from the database
-func (a *CourseRepo) GetCourse(ctx context.Context, id int) (Course, error) {
+func (courseRepo *CourseRepo) GetCourse(ctx context.Context, id int) (Course, error) {
 	query := `SELECT id, "order", name, status, course_language_id, language_id, created_by, updated_by, created_at, updated_at FROM "course" WHERE id = $1`
 
-	rows, err := Pool.Query(ctx, query, id)
+	rows, err := courseRepo.Pool.Query(ctx, query, id)
 
 	if err != nil {
 		return Course{}, err
@@ -53,10 +68,10 @@ func (a *CourseRepo) GetCourse(ctx context.Context, id int) (Course, error) {
 }
 
 // GetCourse retrieves an Course by ID from the database
-func (a *CourseRepo) GetCourseByLanguage(ctx context.Context, sourceLanguage int, targetLanguage int) (Course, error) {
+func (courseRepo *CourseRepo) GetCourseByLanguage(ctx context.Context, sourceLanguage int, targetLanguage int) (Course, error) {
 	query := `SELECT id, "order", name, status, course_language_id, language_id, created_by, updated_by, created_at, updated_at FROM "course" WHERE course_language_id = $1 AND language_id = $2`
 
-	rows, err := Pool.Query(ctx, query, sourceLanguage, targetLanguage)
+	rows, err := courseRepo.Pool.Query(ctx, query, sourceLanguage, targetLanguage)
 
 	if err != nil {
 		return Course{}, err
@@ -68,10 +83,10 @@ func (a *CourseRepo) GetCourseByLanguage(ctx context.Context, sourceLanguage int
 }
 
 // GetCourse retrieves all Course from the database
-func (a *CourseRepo) GetAllCourse(ctx context.Context, limit int, page int) ([]Course, error) {
+func (courseRepo *CourseRepo) GetAllCourse(ctx context.Context, limit int, page int) ([]Course, error) {
 	query := `SELECT id, "order", name, status, course_language_id, language_id, created_by, updated_by, created_at, updated_at FROM "course" where 1=1 OFFSET $1 LIMIT $2`
 
-	rows, err := Pool.Query(ctx, query, (page-1)*limit, limit)
+	rows, err := courseRepo.Pool.Query(ctx, query, (page-1)*limit, limit)
 
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -90,11 +105,11 @@ func (a *CourseRepo) GetAllCourse(ctx context.Context, limit int, page int) ([]C
 }
 
 // CountCourse retrieves all Course from the database
-func (a *CourseRepo) CountCourse(ctx context.Context) (int, error) {
+func (courseRepo *CourseRepo) CountCourse(ctx context.Context) (int, error) {
 	query := `SELECT count(*) FROM "course" where 1=1`
 
 	var count int
-	err := Pool.QueryRow(ctx, query).Scan(&count)
+	err := courseRepo.Pool.QueryRow(ctx, query).Scan(&count)
 
 	if err != nil {
 		return 0, err

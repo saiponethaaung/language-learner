@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/saiponethaaung/language-learner/apps/api/common"
-	"github.com/saiponethaaung/language-learner/apps/api/db"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -13,7 +12,6 @@ import (
 // UpdateLanguage implements LanguageServiceServer.
 func (s *Server) UpdateLanguage(ctx context.Context, dto *UpdateLanguageRequest) (*LanguageObject, error) {
 	authInfo := ctx.Value(common.UserContextKey).(common.AuthInfo)
-	repo := &db.LanguageRepo{}
 
 	// Validate dto
 	if dto.Name == "" {
@@ -25,13 +23,13 @@ func (s *Server) UpdateLanguage(ctx context.Context, dto *UpdateLanguageRequest)
 	}
 
 	// Check language code is already exists or not
-	languageCheck, _ := repo.GetLanguageByCode(ctx, dto.Code)
+	languageCheck, _ := s.languageRepo.GetLanguageByCode(ctx, dto.Code)
 
 	if languageCheck.ID != 0 && languageCheck.ID != int(dto.Id) {
 		return nil, status.Error(codes.AlreadyExists, "Language already exists")
 	}
 
-	language, err := repo.GetLanguage(ctx, int(dto.Id))
+	language, err := s.languageRepo.GetLanguage(ctx, int(dto.Id))
 
 	// TODO handle error separately
 	if err != nil || language.ID == 0 {
@@ -43,7 +41,7 @@ func (s *Server) UpdateLanguage(ctx context.Context, dto *UpdateLanguageRequest)
 	language.UpdatedBy = authInfo.Admin.ID
 	language.UpdatedAt = time.Now()
 
-	_, err = repo.UpdateLanguage(ctx, &language)
+	_, err = s.languageRepo.UpdateLanguage(ctx, &language)
 
 	if err != nil {
 		return nil, status.Error(codes.Internal, "Failed to update language")

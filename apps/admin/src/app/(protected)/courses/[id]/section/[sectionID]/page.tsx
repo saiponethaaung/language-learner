@@ -1,5 +1,6 @@
 "use client";
-import { setLinks } from "@app/components/layouts/nav/nav.slice";
+
+import SideNav from "@app/components/layouts/sidenav/sidenav.layout";
 import { Routes } from "@app/utils/enums/routes";
 import { useAppDispatch } from "@app/utils/store/store";
 import { useParams } from "next/navigation";
@@ -7,11 +8,10 @@ import { useEffect } from "react";
 
 export default function SessoinInfoPage() {
   const { id, sectionID } = useParams<{ id: string; sectionID: string }>();
-  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(
-      setLinks([
+  return (
+    <SideNav
+      links={[
         {
           title: "Info",
           href: Routes.Section.replace(":id", id).replace(
@@ -26,12 +26,8 @@ export default function SessoinInfoPage() {
             sectionID
           ),
         },
-      ])
-    );
-  });
-
-  return (
-    <>
+      ]}
+    >
       Session info
       {/* Chapter list{" "}
       <Link
@@ -41,6 +37,6 @@ export default function SessoinInfoPage() {
       >
         Section 
       </Link> */}
-    </>
+    </SideNav>
   );
 }

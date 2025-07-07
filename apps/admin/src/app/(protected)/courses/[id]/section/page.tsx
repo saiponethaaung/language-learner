@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { setPagination, setSections } from "./section.slice";
 import { SectionObject } from "@app/utils/grpc/type/section";
 import { Routes } from "@app/utils/enums/routes";
-import { setLinks } from "@app/components/layouts/nav/nav.slice";
+import SideNav from "@app/components/layouts/sidenav/sidenav.layout";
 
 export default function ChapterList() {
   const { id } = useParams<{ id: string }>();
@@ -47,64 +47,62 @@ export default function ChapterList() {
     loadData(state.pagination.page);
   }, []);
 
-  useEffect(() => {
-    dispatch(
-      setLinks([
-        { title: "Section", href: Routes.Sections.replace(":id", id) },
-        { title: "Maetrial", href: Routes.Materials.replace(":id", id) },
-      ])
-    );
-  });
-
   return (
-    <PaginationLayout
-      total={0}
-      paginate={(page) => loadData(page)}
-      header={
-        <Container
-          fluid={true}
-          style={{
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Title order={5}>Sections</Title>
-          <Button variant="default" onClick={open}>
-            Add Section
-          </Button>
-        </Container>
-      }
+    <SideNav
+      links={[
+        { title: "Section", href: Routes.Sections.replace(":id", id) },
+        { title: "Material", href: Routes.Materials.replace(":id", id) },
+      ]}
     >
-      <CustomTable<SectionObject>
-        loading={loading}
-        columns={[
-          {
-            name: "ID",
-            selector: "id",
-            type: "link",
-            path: Routes.Section.replace(":id", id),
-            replaceKey: ":sectionID",
-          },
-          {
-            name: "Name",
-            selector: "name",
-            type: "text",
-          },
-        ]}
-        data={state.data}
-      />
-      <CreateSectionModal
-        courseID={parseInt(id)}
-        close={(complete: boolean) => {
-          close();
-          if (complete) {
-            loadData(state.pagination.page);
-          }
-        }}
-        opened={opened}
-      />
-    </PaginationLayout>
+      <PaginationLayout
+        total={0}
+        paginate={(page) => loadData(page)}
+        header={
+          <Container
+            fluid={true}
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Title order={5}>Sections</Title>
+            <Button variant="default" onClick={open}>
+              Add Section
+            </Button>
+          </Container>
+        }
+      >
+        <CustomTable<SectionObject>
+          loading={loading}
+          columns={[
+            {
+              name: "ID",
+              selector: "id",
+              type: "link",
+              path: Routes.Section.replace(":id", id),
+              replaceKey: ":sectionID",
+            },
+            {
+              name: "Name",
+              selector: "name",
+              type: "text",
+            },
+          ]}
+          data={state.data}
+        />
+        <CreateSectionModal
+          courseID={parseInt(id)}
+          close={(complete: boolean) => {
+            close();
+            if (complete) {
+              loadData(state.pagination.page);
+            }
+          }}
+          opened={opened}
+        />
+      </PaginationLayout>
+    </SideNav>
   );
 }
