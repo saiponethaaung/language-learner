@@ -7,9 +7,11 @@
 package section_unit
 
 import (
+	common "github.com/saiponethaaung/language-learner/apps/api/common"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
+	sync "sync"
 	unsafe "unsafe"
 )
 
@@ -20,20 +22,291 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type CreateSectionUnitRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SectionID     int32                  `protobuf:"varint,1,opt,name=sectionID,proto3" json:"sectionID,omitempty"`
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateSectionUnitRequest) Reset() {
+	*x = CreateSectionUnitRequest{}
+	mi := &file_section_unit_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateSectionUnitRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateSectionUnitRequest) ProtoMessage() {}
+
+func (x *CreateSectionUnitRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_section_unit_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateSectionUnitRequest.ProtoReflect.Descriptor instead.
+func (*CreateSectionUnitRequest) Descriptor() ([]byte, []int) {
+	return file_section_unit_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *CreateSectionUnitRequest) GetSectionID() int32 {
+	if x != nil {
+		return x.SectionID
+	}
+	return 0
+}
+
+func (x *CreateSectionUnitRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+type SectionUnitObject struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	SectionID     int32                  `protobuf:"varint,3,opt,name=sectionID,proto3" json:"sectionID,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SectionUnitObject) Reset() {
+	*x = SectionUnitObject{}
+	mi := &file_section_unit_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SectionUnitObject) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SectionUnitObject) ProtoMessage() {}
+
+func (x *SectionUnitObject) ProtoReflect() protoreflect.Message {
+	mi := &file_section_unit_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SectionUnitObject.ProtoReflect.Descriptor instead.
+func (*SectionUnitObject) Descriptor() ([]byte, []int) {
+	return file_section_unit_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *SectionUnitObject) GetId() int32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *SectionUnitObject) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *SectionUnitObject) GetSectionID() int32 {
+	if x != nil {
+		return x.SectionID
+	}
+	return 0
+}
+
+type PaginationResponse struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Data          []*SectionUnitObject     `protobuf:"bytes,1,rep,name=data,proto3" json:"data,omitempty"`
+	Pagination    *common.PaginationObject `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PaginationResponse) Reset() {
+	*x = PaginationResponse{}
+	mi := &file_section_unit_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PaginationResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PaginationResponse) ProtoMessage() {}
+
+func (x *PaginationResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_section_unit_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PaginationResponse.ProtoReflect.Descriptor instead.
+func (*PaginationResponse) Descriptor() ([]byte, []int) {
+	return file_section_unit_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *PaginationResponse) GetData() []*SectionUnitObject {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+func (x *PaginationResponse) GetPagination() *common.PaginationObject {
+	if x != nil {
+		return x.Pagination
+	}
+	return nil
+}
+
+type GetSectionUnitRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Page          int32                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	Limit         int32                  `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
+	SectionID     int32                  `protobuf:"varint,3,opt,name=sectionID,proto3" json:"sectionID,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetSectionUnitRequest) Reset() {
+	*x = GetSectionUnitRequest{}
+	mi := &file_section_unit_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetSectionUnitRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetSectionUnitRequest) ProtoMessage() {}
+
+func (x *GetSectionUnitRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_section_unit_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetSectionUnitRequest.ProtoReflect.Descriptor instead.
+func (*GetSectionUnitRequest) Descriptor() ([]byte, []int) {
+	return file_section_unit_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetSectionUnitRequest) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *GetSectionUnitRequest) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *GetSectionUnitRequest) GetSectionID() int32 {
+	if x != nil {
+		return x.SectionID
+	}
+	return 0
+}
+
 var File_section_unit_proto protoreflect.FileDescriptor
 
 const file_section_unit_proto_rawDesc = "" +
 	"\n" +
-	"\x12section_unit.proto\x12\fsection_unit2\x14\n" +
-	"\x12SectionUnitServiceBBZ@github.com/saiponethaaung/language-learner/apps/api/section_unitb\x06proto3"
+	"\x12section_unit.proto\x12\fsection_unit\x1a\fcommon.proto\"L\n" +
+	"\x18CreateSectionUnitRequest\x12\x1c\n" +
+	"\tsectionID\x18\x01 \x01(\x05R\tsectionID\x12\x12\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\"U\n" +
+	"\x11SectionUnitObject\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1c\n" +
+	"\tsectionID\x18\x03 \x01(\x05R\tsectionID\"\x83\x01\n" +
+	"\x12PaginationResponse\x123\n" +
+	"\x04data\x18\x01 \x03(\v2\x1f.section_unit.SectionUnitObjectR\x04data\x128\n" +
+	"\n" +
+	"pagination\x18\x02 \x01(\v2\x18.common.PaginationObjectR\n" +
+	"pagination\"_\n" +
+	"\x15GetSectionUnitRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x14\n" +
+	"\x05limit\x18\x02 \x01(\x05R\x05limit\x12\x1c\n" +
+	"\tsectionID\x18\x03 \x01(\x05R\tsectionID2\xfc\x01\n" +
+	"\x12SectionUnitService\x12S\n" +
+	"\x06Create\x12&.section_unit.CreateSectionUnitRequest\x1a\x1f.section_unit.SectionUnitObject\"\x00\x12Q\n" +
+	"\x06GetAll\x12#.section_unit.GetSectionUnitRequest\x1a .section_unit.PaginationResponse\"\x00\x12>\n" +
+	"\x03Get\x12\x14.common.IntIDRequest\x1a\x1f.section_unit.SectionUnitObject\"\x00BBZ@github.com/saiponethaaung/language-learner/apps/api/section_unitb\x06proto3"
 
-var file_section_unit_proto_goTypes = []any{}
+var (
+	file_section_unit_proto_rawDescOnce sync.Once
+	file_section_unit_proto_rawDescData []byte
+)
+
+func file_section_unit_proto_rawDescGZIP() []byte {
+	file_section_unit_proto_rawDescOnce.Do(func() {
+		file_section_unit_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_section_unit_proto_rawDesc), len(file_section_unit_proto_rawDesc)))
+	})
+	return file_section_unit_proto_rawDescData
+}
+
+var file_section_unit_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_section_unit_proto_goTypes = []any{
+	(*CreateSectionUnitRequest)(nil), // 0: section_unit.CreateSectionUnitRequest
+	(*SectionUnitObject)(nil),        // 1: section_unit.SectionUnitObject
+	(*PaginationResponse)(nil),       // 2: section_unit.PaginationResponse
+	(*GetSectionUnitRequest)(nil),    // 3: section_unit.GetSectionUnitRequest
+	(*common.PaginationObject)(nil),  // 4: common.PaginationObject
+	(*common.IntIDRequest)(nil),      // 5: common.IntIDRequest
+}
 var file_section_unit_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	1, // 0: section_unit.PaginationResponse.data:type_name -> section_unit.SectionUnitObject
+	4, // 1: section_unit.PaginationResponse.pagination:type_name -> common.PaginationObject
+	0, // 2: section_unit.SectionUnitService.Create:input_type -> section_unit.CreateSectionUnitRequest
+	3, // 3: section_unit.SectionUnitService.GetAll:input_type -> section_unit.GetSectionUnitRequest
+	5, // 4: section_unit.SectionUnitService.Get:input_type -> common.IntIDRequest
+	1, // 5: section_unit.SectionUnitService.Create:output_type -> section_unit.SectionUnitObject
+	2, // 6: section_unit.SectionUnitService.GetAll:output_type -> section_unit.PaginationResponse
+	1, // 7: section_unit.SectionUnitService.Get:output_type -> section_unit.SectionUnitObject
+	5, // [5:8] is the sub-list for method output_type
+	2, // [2:5] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_section_unit_proto_init() }
@@ -47,12 +320,13 @@ func file_section_unit_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_section_unit_proto_rawDesc), len(file_section_unit_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   0,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_section_unit_proto_goTypes,
 		DependencyIndexes: file_section_unit_proto_depIdxs,
+		MessageInfos:      file_section_unit_proto_msgTypes,
 	}.Build()
 	File_section_unit_proto = out.File
 	file_section_unit_proto_goTypes = nil

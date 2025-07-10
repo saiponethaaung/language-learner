@@ -15,6 +15,7 @@ import (
 	"github.com/saiponethaaung/language-learner/apps/api/db"
 	"github.com/saiponethaaung/language-learner/apps/api/language"
 	"github.com/saiponethaaung/language-learner/apps/api/section"
+	"github.com/saiponethaaung/language-learner/apps/api/section_unit"
 	"github.com/saiponethaaung/language-learner/apps/api/user"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -57,6 +58,7 @@ func main() {
 	langugeRepo := db.NewLanguageRepo(dbPool)
 	courseRepo := db.NewCourseRepo(dbPool)
 	sectionRepo := db.NewSectionRepo(dbPool)
+	sectionUnitRepo := db.NewSectionUnitRepo(dbPool)
 
 	// Auth interceptor
 	authInterceptor := common.NewAuthInterceptor(adminRepo, userRepo)
@@ -86,6 +88,10 @@ func main() {
 	// Section Handler
 	sectionServer := section.NewSectionServer(sectionRepo)
 	section.RegisterSectionServiceServer(grpcServer, sectionServer)
+
+	// Section unit handler
+	sectionUnitHandler := section_unit.NewSectionUnitServer(sectionUnitRepo)
+	section_unit.RegisterSectionUnitServiceServer(grpcServer, sectionUnitHandler)
 
 	fmt.Printf("Server started on port %s", port)
 

@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import classes from "./login.module.css";
 import { useEffect, useState } from "react";
-import { AdminLogin } from "@app/utils/grpc/admin_client";
+import { AdminLogin } from "@app/utils/grpc/admin.client";
 import { setCookie } from "@app/utils/auth/auth";
 import { useRouter } from "next/navigation";
 import { useForm } from "@mantine/form";

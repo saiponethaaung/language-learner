@@ -1,4 +1,4 @@
-import { CreateLanguage } from "@app/utils/grpc/language_client";
+import { CreateLanguage } from "@app/utils/grpc/language.client";
 import { Button, Modal, Space, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useState } from "react";

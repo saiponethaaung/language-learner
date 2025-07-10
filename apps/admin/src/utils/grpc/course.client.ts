@@ -5,7 +5,7 @@ import {
   Client,
   GRPC_ERROR_CODES,
   ResponseInterface,
-} from "./common_client";
+} from "./common.client";
 import { course } from "./gen/course";
 
 export const CourseClient = async () => {

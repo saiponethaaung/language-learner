@@ -5,7 +5,7 @@ import {
   Client,
   GRPC_ERROR_CODES,
   ResponseInterface,
-} from "./common_client";
+} from "./common.client";
 import { common } from "./gen/common";
 import { section } from "./gen/section";
 

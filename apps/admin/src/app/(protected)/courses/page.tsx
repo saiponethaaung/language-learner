@@ -17,14 +17,14 @@ import {
 } from "@tabler/icons-react";
 import classes from "./page.module.scss";
 import { useEffect, useState } from "react";
-import { GetCourses } from "@app/utils/grpc/course_client";
-import { formatDate } from "@app/utils/date_format";
+import { GetCourses } from "@app/utils/grpc/course.client";
+import { formatDate } from "@app/utils/date-format";
 import { useDisclosure } from "@mantine/hooks";
 import { useAppDispatch, useAppSelector } from "@app/utils/store/store";
 import { setCourses, setLanguages, setPagination } from "./course.slice";
 import Link from "next/link";
-import CreateCourseModal from "@app/components/modal/create_course/create_course_modal";
-import { GetLanguagesByIds } from "@app/utils/grpc/language_client";
+import CreateCourseModal from "@app/components/modal/create-course/create-course.modal";
+import { GetLanguagesByIds } from "@app/utils/grpc/language.client";
 
 interface RowData {
   name: string;

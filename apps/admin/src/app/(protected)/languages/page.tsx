@@ -17,10 +17,10 @@ import {
 } from "@tabler/icons-react";
 import classes from "./page.module.scss";
 import { useEffect, useState } from "react";
-import { GetLanguages } from "@app/utils/grpc/language_client";
-import { formatDate } from "@app/utils/date_format";
+import { GetLanguages } from "@app/utils/grpc/language.client";
+import { formatDate } from "@app/utils/date-format";
 import { useDisclosure } from "@mantine/hooks";
-import CreateLanguageModal from "@app/components/modal/create_language/create_language_modal";
+import CreateLanguageModal from "@app/components/modal/create-language/create-language.modal";
 import { useAppDispatch, useAppSelector } from "@app/utils/store/store";
 import { setLanguages, setPagination } from "./language.slice";
 

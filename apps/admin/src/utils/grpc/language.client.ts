@@ -5,7 +5,7 @@ import {
   Client,
   GRPC_ERROR_CODES,
   ResponseInterface,
-} from "./common_client";
+} from "./common.client";
 import { language } from "./gen/language";
 
 export const LanguageClient = async () => {

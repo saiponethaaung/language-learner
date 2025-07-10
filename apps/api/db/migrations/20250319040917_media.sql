@@ -3,7 +3,8 @@
 CREATE TABLE "media" (
   id bigserial PRIMARY KEY,
   name text NOT NULL,
-  store_provider text NOT NULL,
+  mime_type varchar(255) NOT NULL,
+  store_provider varchar(255) NOT NULL,
   store_key text NOT NULL,
   created_by bigserial,
   updated_by bigserial,
@@ -16,10 +17,8 @@ CREATE TABLE "media" (
   set
     null
 );
-
 -- +goose StatementEnd
 -- +goose Down
 -- +goose StatementBegin
 DROP TABLE "media";
-
--- +goose StatementEn
+-- +goose StatementEnd

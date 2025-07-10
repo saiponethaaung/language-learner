@@ -1,4 +1,4 @@
-import { CreateSection } from "@app/utils/grpc/section_client";
+import { CreateSection } from "@app/utils/grpc/section.client";
 import { Button, Modal, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useState } from "react";

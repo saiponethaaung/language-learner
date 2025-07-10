@@ -1,5 +1,5 @@
-import { CreateCourse } from "@app/utils/grpc/course_client";
-import { GetLanguages } from "@app/utils/grpc/language_client";
+import { CreateCourse } from "@app/utils/grpc/course.client";
+import { GetLanguages } from "@app/utils/grpc/language.client";
 import { LanguageObject } from "@app/utils/grpc/type/language";
 import { Button, Modal, Select, Space, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";

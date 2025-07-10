@@ -2,7 +2,7 @@
 
 import { admin } from "./gen/admin";
 import { common } from "./gen/common";
-import { AdminMeta, Client, GRPC_ERROR_CODES } from "./common_client";
+import { AdminMeta, Client, GRPC_ERROR_CODES } from "./common.client";
 import { ServiceError } from "@grpc/grpc-js";
 
 export const AdminClient = async () => {

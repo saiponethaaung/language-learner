@@ -51,6 +51,7 @@ class GenerateProtos {
           "language.proto",
           "course.proto",
           "section.proto",
+          "section_unit.proto",
         ].includes(file)
       ) {
         // generate proto handler
@@ -75,6 +76,7 @@ class GenerateProtos {
           "language.proto",
           "course.proto",
           "section.proto",
+          "section_unit.proto",
         ].includes(file)
       ) {
         let commands = "cd ../../";

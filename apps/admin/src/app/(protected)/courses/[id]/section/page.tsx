@@ -1,8 +1,8 @@
 "use client";
 import PaginationLayout from "@app/components/layouts/pagination/pagination.layout";
-import CreateSectionModal from "@app/components/modal/create_section/create_section_modal";
+import CreateSectionModal from "@app/components/modal/create-section/create-section.modal";
 import CustomTable from "@app/components/table/table";
-import { GetSections } from "@app/utils/grpc/section_client";
+import { GetSections } from "@app/utils/grpc/section.client";
 import { useAppDispatch, useAppSelector } from "@app/utils/store/store";
 import { Button, Container, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -13,7 +13,7 @@ import { SectionObject } from "@app/utils/grpc/type/section";
 import { Routes } from "@app/utils/enums/routes";
 import SideNav from "@app/components/layouts/sidenav/sidenav.layout";
 
-export default function ChapterList() {
+export default function SectionList() {
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState<boolean>(true);
   const [opened, { open, close }] = useDisclosure(false);
